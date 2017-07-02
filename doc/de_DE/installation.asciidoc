@@ -1,7 +1,7 @@
-Commencer par installer le plugin depuis le market : https://www.jeedom.fr/doc/documentation/core/fr_FR/doc-core-plugin.html
+Beginnen Sie, indem Sie das Plugin vom Markt aus installieren : https://www.jeedom.fr/doc/documentation/core/fr_FR/doc-core-plugin.html
 
 
-Après avoir activé le plugin vous devez choisir le port du modem :
+Nach der Aktivierung des Plugins, müssen Sie den Modem-Port wählen :
 
 image::../images/teleinformation_plugin.png[]
 
@@ -9,6 +9,6 @@ En cas d'utilisation d'un modem série il est nécessaire de renseigner son port
 
 image::../images/teleinformation_serie.png[]
 
-Enfin pensez à sauvegarder.
+Schließlich denken Sie daran, zu speichern.
 
-Un nouveau Protocole est disponible dans Plugins => Protocole domotique => Téléinfo
+Ein neues Protokoll gibt es in Plugins => Automatisierungsprotokoll => Teleinfo

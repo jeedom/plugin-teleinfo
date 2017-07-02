@@ -1,15 +1,15 @@
 == Teleinformation
 
-=== Description
-Le plugin Téléinformation permet de récupérer les informations de votre compteur EDF et de les afficher sur le Jeedom de votre choix. Pour cela 2 modes sont disponibles, le mode local et le mode réseau.
+== Beschreibung
+Das Teleinformation Plugin erlaubt es, die Informationen Ihres EDF Zählers abzufragen und sie auf Jeedom Ihrer Wahl anzuzeigen. Dafür sind 2 Modi verfügbar, der Lokale-Modus und der Netzwerk-Modus.
 
 
 '''
-=== Architecture
+=== Architektur
 include::hardware.asciidoc[]
 
 '''
-=== Cas d'utilisation de 2 compteurs
+=== Anwendungsfall mit 2 Zählern
 include::mode2compteurs.asciidoc[]
 
 '''
@@ -17,23 +17,23 @@ include::mode2compteurs.asciidoc[]
 include::installation.asciidoc[]
 
 '''
-=== Configuration
+=== Konfiguration
 include::configuration.asciidoc[]
 
 '''
-=== Les commandes
+=== Die Befehle
 include::commandes.asciidoc[]
 
 '''
-=== Les statistiques
+=== Die Statistik
 include::statistiques.asciidoc[]
 
 '''
-=== Les unités
+=== Die Einheiten
 include::unites.asciidoc[]
 
 '''
-=== Santé
+=== Gesundheit
 include::sante.asciidoc[]
 
 '''
@@ -45,5 +45,5 @@ include::api.asciidoc[]
 include::faq.asciidoc[]
 
 '''
-=== Changelog
+=== Änderungsprotokoll
 include::changelog.asciidoc[]

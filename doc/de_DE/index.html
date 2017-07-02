@@ -415,20 +415,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table des matières</div>
 <ul class="sectlevel1">
-<li><a href="#_teleinformation">1. Teleinformation</a>
+<li><a href="#_teleinformation">1. Teleinformation</a></li>
+<li><a href="#_beschreibung">2. Beschreibung</a>
 <ul class="sectlevel2">
-<li><a href="#_description">1.1. Description</a></li>
-<li><a href="#_architecture">1.2. Architecture</a></li>
-<li><a href="#_cas_d_utilisation_de_2_compteurs">1.3. Cas d&#8217;utilisation de 2 compteurs</a></li>
-<li><a href="#_installation">1.4. Installation</a></li>
-<li><a href="#_configuration">1.5. Configuration</a></li>
-<li><a href="#_les_commandes">1.6. Les commandes</a></li>
-<li><a href="#_les_statistiques">1.7. Les statistiques</a></li>
-<li><a href="#_les_unités">1.8. Les unités</a></li>
-<li><a href="#_santé">1.9. Santé</a></li>
-<li><a href="#_api">1.10. API</a></li>
-<li><a href="#_faq">1.11. FAQ</a></li>
-<li><a href="#_changelog">1.12. Changelog</a></li>
+<li><a href="#_architektur">2.1. Architektur</a></li>
+<li><a href="#_anwendungsfall_mit_2_zählern">2.2. Anwendungsfall mit 2 Zählern</a></li>
+<li><a href="#_installation">2.3. Installation</a></li>
+<li><a href="#_konfiguration">2.4. Konfiguration</a></li>
+<li><a href="#_die_befehle">2.5. Die Befehle</a></li>
+<li><a href="#_die_statistik">2.6. Die Statistik</a></li>
+<li><a href="#_die_einheiten">2.7. Die Einheiten</a></li>
+<li><a href="#_gesundheit">2.8. Gesundheit</a></li>
+<li><a href="#_api">2.9. API</a></li>
+<li><a href="#_faq">2.10. FAQ</a></li>
+<li><a href="#_Änderungsprotokoll">2.11. Änderungsprotokoll</a></li>
 </ul>
 </li>
 </ul>
@@ -438,15 +438,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_teleinformation">1. Teleinformation</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_description">1.1. Description</h3>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_beschreibung">2. Beschreibung</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Le plugin Téléinformation permet de récupérer les informations de votre compteur EDF et de les afficher sur le Jeedom de votre choix. Pour cela 2 modes sont disponibles, le mode local et le mode réseau.</p>
+<p>Das Teleinformation Plugin erlaubt es, die Informationen Ihres EDF Zählers abzufragen und sie auf Jeedom Ihrer Wahl anzuzeigen. Dafür sind 2 Modi verfügbar, der Lokale-Modus und der Netzwerk-Modus.</p>
 </div>
 <hr>
-</div>
 <div class="sect2">
-<h3 id="_architecture">1.2. Architecture</h3>
+<h3 id="_architektur">2.1. Architektur</h3>
 <div class="paragraph">
 <p>Pour récupérer la Téléinformation il faut se connecter sur les bornes I1 et I2 du compteur :</p>
 </div>
@@ -466,7 +469,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_cas_d_utilisation_de_2_compteurs">1.3. Cas d&#8217;utilisation de 2 compteurs</h3>
+<h3 id="_anwendungsfall_mit_2_zählern">2.2. Anwendungsfall mit 2 Zählern</h3>
 <div class="paragraph">
 <p>Dans le cas d&#8217;utilisation du modem Cartelectronic 2 Compteurs et le branchement de 2 compteurs électrique il est nécessaire d&#8217;activer le mode 2 compteurs.</p>
 </div>
@@ -478,12 +481,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_installation">1.4. Installation</h3>
+<h3 id="_installation">2.3. Installation</h3>
 <div class="paragraph">
-<p>Commencer par installer le plugin depuis le market : <a href="https://www.jeedom.fr/doc/documentation/core/fr_FR/doc-core-plugin.html" class="bare">https://www.jeedom.fr/doc/documentation/core/fr_FR/doc-core-plugin.html</a></p>
+<p>Beginnen Sie, indem Sie das Plugin vom Markt aus installieren : <a href="https://www.jeedom.fr/doc/documentation/core/fr_FR/doc-core-plugin.html" class="bare">https://www.jeedom.fr/doc/documentation/core/fr_FR/doc-core-plugin.html</a></p>
 </div>
 <div class="paragraph">
-<p>Après avoir activé le plugin vous devez choisir le port du modem :</p>
+<p>Nach der Aktivierung des Plugins, müssen Sie den Modem-Port wählen :</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -499,15 +502,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>Enfin pensez à sauvegarder.</p>
+<p>Schließlich denken Sie daran, zu speichern.</p>
 </div>
 <div class="paragraph">
-<p>Un nouveau Protocole est disponible dans Plugins &#8658; Protocole domotique &#8658; Téléinfo</p>
+<p>Ein neues Protokoll gibt es in Plugins &#8658; Automatisierungsprotokoll &#8658; Teleinfo</p>
 </div>
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_configuration">1.5. Configuration</h3>
+<h3 id="_konfiguration">2.4. Konfiguration</h3>
 <div class="paragraph">
 <p>Le plugin offre la possibilité de créer automatiquement les commandes réceptionnées. Pour cela démarrez le daemon, attendez que les premières trames arrivent puis rendez vous sur Plugin / Protocoles Domotiques / Téléinfo.
 Vous devriez voir apparaitre un objet avec un ID.
@@ -538,7 +541,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_les_commandes">1.6. Les commandes</h3>
+<h3 id="_die_befehle">2.5. Die Befehle</h3>
 <div class="paragraph">
 <p>Les commandes (Ajouter une donnée) correspondent aux données envoyées par le modem.</p>
 </div>
@@ -582,29 +585,27 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_les_statistiques">1.7. Les statistiques</h3>
+<h3 id="_die_statistik">2.6. Die Statistik</h3>
 <div class="paragraph">
-<p>Afin d&#8217;obtenir des informations sur une durée plus longue des statistiques ont étés ajoutées.</p>
+<p>Um Informationen über eine längere Zeit zu erhalten, wurden Statistiken hinzugefügt.</p>
 </div>
 <div class="paragraph">
-<p>Ces statistiques correspondent aux informations suivantes :</p>
+<p>Diese Statistiken basieren auf folgende Informationen :</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Consommation du jour en cours</p>
+<p>Verbrauch, aktueller Tag</p>
 </li>
 <li>
-<p>Consommation d&#8217;hier</p>
+<p>Verbrauch, gestern</p>
 </li>
 <li>
-<p>Consommation du mois en cours</p>
+<p>Verbrauch, aktueller Monat</p>
 </li>
 <li>
-<p>Consommation du mois précédent</p>
-</li>
-<li>
-<p>Tendance journalière de la consommation (Pour être informé si l&#8217;on consomme plus ou moins par rapport au jour précédent à la même heure)</p>
+<p>Verbrauch, vorheriger Monat
+Tägliche Tendenz des Verbrauchs (um informiert zu werden, wenn man mehr oder weniger im Vergleich zum vorhergehenden Tag zur gleichen Zeit verbraucht wird)</p>
 </li>
 <li>
 <p>Puissance apparente : Certains compteurs ne renvoie pas l&#8217;information PAPP. Pour cela un calcul à été implémenté afin d&#8217;obtenir une moyenne de consommation en W toutes les minutes.</p>
@@ -614,7 +615,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_les_unités">1.8. Les unités</h3>
+<h3 id="_die_einheiten">2.7. Die Einheiten</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -646,12 +647,12 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_santé">1.9. Santé</h3>
+<h3 id="_gesundheit">2.8. Gesundheit</h3>
 <div class="paragraph">
-<p>Il est possible de vérifier la réception des données avant traitement.</p>
+<p>Es ist möglich, die Daten vor der Verarbeitung zu überprüfen.</p>
 </div>
 <div class="paragraph">
-<p>Pour cela rendez vous sur l&#8217;objet téléinfo puis cliquez sur Santé</p>
+<p>Dazu gehen Sie auf das Teleinfo Objekt und klicken Sie auf Gesundheit.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -659,7 +660,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 </div>
 </div>
 <div class="paragraph">
-<p>La fenêtre qui s&#8217;ouvre permet de vérifier la bonne reception des données :</p>
+<p>Das sich öffnende Fenster ermöglicht den Empfang der Daten zu überprüfen :</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -669,7 +670,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_api">1.10. API</h3>
+<h3 id="_api">2.9. API</h3>
 <div class="paragraph">
 <p>Le plugin téléinfo met à disposition une api afin de mettre à jour les données depuis d&#8217;autres systèmes.
 Il s&#8217;agit d&#8217;une URL d&#8217;appel de type GET.
@@ -711,7 +712,7 @@ Pour y accéder ces informations sont obligatoires :</p>
 <p>L&#8217;URL sera donc surchargée de toutes information utile.</p>
 </div>
 <div class="paragraph">
-<p>Par exemple :</p>
+<p>Zum Beispiel :</p>
 </div>
 <div class="paragraph">
 <p>IP_JEEDOM : 192.168.1.15</p>
@@ -765,7 +766,7 @@ Pour y accéder ces informations sont obligatoires :</p>
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_faq">1.11. FAQ</h3>
+<h3 id="_faq">2.10. FAQ</h3>
 <div class="openblock panel">
 <div class="title">J&#8217;ai un modem Cartelectronic qui n&#8217;envoi aucune information</div><div class="content">
 <div class="paragraph">
@@ -925,9 +926,9 @@ Le lissage des historiques Jeedom peut induire des valeurs statistiques erronée
 <hr>
 </div>
 <div class="sect2">
-<h3 id="_changelog">1.12. Changelog</h3>
+<h3 id="_Änderungsprotokoll">2.11. Änderungsprotokoll</h3>
 <div class="paragraph">
-<p>Présent sur le plugin Téléinfo du market</p>
+<p>Aktuelles Teleinfo Plugin auf dem Markt</p>
 </div>
 </div>
 </div>

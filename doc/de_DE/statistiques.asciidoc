@@ -1,10 +1,10 @@
-Afin d'obtenir des informations sur une durée plus longue des statistiques ont étés ajoutées.
+Um Informationen über eine längere Zeit zu erhalten, wurden Statistiken hinzugefügt.
 
-Ces statistiques correspondent aux informations suivantes :
+Diese Statistiken basieren auf folgende Informationen :
 
-- Consommation du jour en cours
-- Consommation d'hier
-- Consommation du mois en cours
-- Consommation du mois précédent
-- Tendance journalière de la consommation (Pour être informé si l'on consomme plus ou moins par rapport au jour précédent à la même heure)
+- Verbrauch, aktueller Tag 
+- Verbrauch, gestern
+- Verbrauch, aktueller Monat 
+- Verbrauch, vorheriger Monat
+Tägliche Tendenz des Verbrauchs (um informiert zu werden, wenn man mehr oder weniger im Vergleich zum vorhergehenden Tag zur gleichen Zeit verbraucht wird)
 - Puissance apparente : Certains compteurs ne renvoie pas l'information PAPP. Pour cela un calcul à été implémenté afin d'obtenir une moyenne de consommation en W toutes les minutes.

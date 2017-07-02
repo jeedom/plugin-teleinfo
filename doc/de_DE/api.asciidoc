@@ -28,7 +28,7 @@ Par exemple pour l'index d'un abonnement BASE EDF équivalent à 123456789 :
 L'URL sera donc surchargée de toutes information utile.
 
 
-Par exemple : 
+Zum Beispiel : 
 
 
 IP_JEEDOM : 192.168.1.15
