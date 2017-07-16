@@ -113,7 +113,7 @@ class teleinfo extends eqLogic {
 								$cmd->setSubType('numeric');
 								$cmd->setDisplay('generic_type','GENERIC_INFO');
 								$cmd->setIsHistorized(1);
-							break;
+								break;
 						}		
 			//$cmd->setIsHistorized(1);
 			$cmd->setEventOnly(1);
