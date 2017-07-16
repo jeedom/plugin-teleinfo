@@ -58,8 +58,10 @@ class teleinfo extends eqLogic {
 		$eqLogic->setEqType_name('teleinfo');
 		$eqLogic->setIsEnable(1);
 		$eqLogic->setIsVisible(1);
+		$eqLogic->setConfiguration('AutoCreateFromCompteur','1');
 		$eqLogic->save();
 		//$eqLogic->applyModuleConfiguration();
+		log::add('teleinfo', 'info', 'Création de l\'équipement ' . $_def['ADCO']);
 		return $eqLogic;
 	}
 	
@@ -89,11 +91,13 @@ class teleinfo extends eqLogic {
 			$cmd->setType('info');
 			$cmd->setConfiguration('info_conso', $_oKey);
 			switch ($_oKey) {
-							case "PAPP":
-								$cmd->setDisplay('generic_type','GENERIC_INFO');
-								$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
-								$cmd->setSubType('string');
-								break;
+							//case "PAPP":
+								//$cmd->setDisplay('generic_type','GENERIC_INFO');
+								//$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
+								//$cmd->setSubType('string');
+								//break;
+							case "MOTDETAT":
+							case "PTEC":
 							case "OPTARIF":
 							case "HHPHC":
 							case "PPOT":
@@ -101,13 +105,17 @@ class teleinfo extends eqLogic {
 							case "DEMAIN":
 								$cmd->setSubType('string');
 								$cmd->setDisplay('generic_type','GENERIC_INFO');
+								$cmd->setIsHistorized(0);
 								break;
+							case "PAPP":
+								$cmd->setDisplay('icon','<i class="fa fa-tachometer"></i>');
 							default:
 								$cmd->setSubType('numeric');
 								$cmd->setDisplay('generic_type','GENERIC_INFO');
-							break;	
+								$cmd->setIsHistorized(1);
+							break;
 						}		
-			$cmd->setIsHistorized(1);
+			//$cmd->setIsHistorized(1);
 			$cmd->setEventOnly(1);
 			$cmd->setIsVisible(1);
 			$cmd->save();
@@ -1035,7 +1043,7 @@ class teleinfo extends eqLogic {
 						log::add('teleinfo', 'debug', '=> papp');
 						if($cmd->getDisplay('generic_type') == ''){
 							$cmd->setDisplay('generic_type','GENERIC_INFO');
-							$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
+							$cmd->setDisplay('icon','<i class="fa fa-tachometer"></i>');
 						}
 						//$cmd->setTemplate('dashboard',  $template_name . 'teleinfo_conso_inst');
 						//$cmd->setTemplate('mobile',  $template_name . 'teleinfo_conso_inst');
@@ -1179,7 +1187,7 @@ class teleinfo extends eqLogic {
 			$cmd->setType('info');
 			$cmd->setConfiguration('info_conso', 'PAPP');
 			$cmd->setDisplay('generic_type','GENERIC_INFO');
-			$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
+			$cmd->setDisplay('icon','<i class="fa fa-tachometer"></i>');
 			$cmd->setSubType('numeric');
 			$cmd->setUnite('VA (~W)');
 			$cmd->setIsHistorized(1);
@@ -1238,7 +1246,7 @@ class teleinfo extends eqLogic {
 			$cmd->setType('info');
 			$cmd->setConfiguration('info_conso', 'PAPP');
 			$cmd->setDisplay('generic_type','GENERIC_INFO');
-			$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
+			$cmd->setDisplay('icon','<i class="fa fa-tachometer"></i>');
 			$cmd->setSubType('numeric');
 			$cmd->setUnite('VA (~W)');
 			$cmd->setIsHistorized(1);
