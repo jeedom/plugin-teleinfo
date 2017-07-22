@@ -130,8 +130,8 @@ function addCmdToTable(_cmd) {
 	else{
 	selRequestType = '<select style="width : 220px;" class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="info_conso">';
 	selRequestType += '<option value="BASE">Index (BASE)</option>';
-    selRequestType += '<option value="HCHP">Index heures pleines (BLEU)</option>';
-    selRequestType += '<option value="HCHC">Index heures creuses (BLEU)</option>';
+	selRequestType += '<option value="HCHP">Index heures pleines (BLEU)</option>';
+ 	selRequestType += '<option value="HCHC">Index heures creuses (BLEU)</option>';
 	selRequestType += '<option value="PTEC">Tranche tarifaire</option>';
 	selRequestType += '<option value="PAPP">Puissance apparente instantanée</option>';
 	selRequestType += '<option value="IINST">Intensité instantanée</option>';
@@ -161,7 +161,8 @@ function addCmdToTable(_cmd) {
 	selRequestType += '<option value="BBRHPJR">Index Heures Pleines Jour Rouge (EJP)</option>';
 	selRequestType += '<option value="PEJP">Préavis (30 min avant) (EJP)</option>';
 	selRequestType += '<option value="DEMAIN">Couleur lendemain (TEMPO)</option>';
-    selRequestType += '</select>';
+	selRequestType += '<option value="MOTDETAT">Mot d\'état du compteur</option>';
+ 	selRequestType += '</select>';
 	}
 	
 	if(init(_cmd.configuration['type']) == 'panel'){
