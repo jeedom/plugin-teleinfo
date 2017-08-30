@@ -123,7 +123,7 @@ class teleinfo extends eqLogic {
 		$return['state'] = 'ok';
 		foreach(eqLogic::byType('teleinfo') as $teleinfo){
 			$cron = cron::byClassAndFunction('teleinfo', 'pull', array('id' => $teleinfo->getId()));
-			if(!is_object($cron) || !$cron->running())
+			if(!is_object($cron) )
 				$return['state'] = 'nok';
 		}
 		return $return;
