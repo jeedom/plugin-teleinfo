@@ -120,12 +120,11 @@ class teleinfo extends eqLogic {
 		$return = array();
 		$return['log'] = 'teleinfo';	
 		$return['launchable'] = 'ok';
+		$return['state'] = 'ok';
 		foreach(eqLogic::byType('teleinfo') as $teleinfo){
 			$cron = cron::byClassAndFunction('teleinfo', 'pull', array('id' => $teleinfo->getId()));
-			if(is_object($cron) && $cron->running())
-				$return['state'] = 'ok';
-			else
-				return $return['state'] = 'nok';
+			if(!is_object($cron) && !$cron->running())
+				$return['state'] = 'nok';
 		}
 		return $return;
 	}
