@@ -8,8 +8,6 @@ $controlerState = teleinfo::getTeleinfoInfo('');
 if($controlerState === ''){
    echo '<div class="alert jqAlert alert-danger" style="margin : 0px 5px 15px 15px; padding : 7px 35px 7px 15px;">{{Impossible de contacter le serveur teleinfo. Avez vous bien renseigné l\'IP ?}}</div>'; 
 }
-//$deamonRunning = false;
-//$deamonRunning = teleinfo::deamonRunning();
 ?>
 
 <div class="row row-overflow">
@@ -208,7 +206,20 @@ if($controlerState === ''){
 										</select>
 									</div>
 								</div>-->
-								
+								<div class="form-group"><label class="col-md-3 control-label pull-left">{{Unités d'affichage :}}</label>
+									<div class="col-md-3">
+										<select id="select_port" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="port">
+											<option value="">Aucun</option>
+											<?php
+											foreach (jeedom::getUsbMapping() as $name => $value) {
+												echo '<option value="' . $value . '">' . $name . ' (' . $value . ')</option>';
+											}
+											echo '<option value="serie">Modem Série</option>';
+											?>
+										</select>
+										<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modem_serie_addr" style="margin-top:5px;display:none" placeholder="Renseigner le port série (ex : /dev/ttyS0)"/>
+									</div>
+		
 							</fieldset>
 						</form>
 					</div>
