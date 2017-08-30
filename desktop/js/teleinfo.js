@@ -39,7 +39,12 @@ function stopTeleinfoDeamon() {
         }
     });
 }
-
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=port]').on('change', function() {
+	if($(this).val() == 'serie')
+		$('.eqLogicAttr[data-l1key=configuration][data-l2key=modem_serie_addr]').show();
+	else
+		$('.eqLogicAttr[data-l1key=configuration][data-l2key=modem_serie_addr]').hide();
+});
 $('#create_data_teleinfo').on('click', function() {
 	document.getElementById("checkbox-autocreate").checked = true;
 	$('.eqLogicAction[data-action=save]').click();
