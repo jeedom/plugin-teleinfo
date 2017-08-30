@@ -126,6 +126,21 @@ if($controlerState === ''){
 										<input type="text" class="eqLogicAttr form-control tooltips" title="{{Identifiant du compteur aussi connu sous le nom ADCO.}}" data-l1key="logicalId" placeholder="{{ADCO du compteur}}"/>
 									</div>
 								</div>
+								<div class="form-group">
+									<label class="col-lg-4 control-label">{{Identifiant Compteur}}</label>
+									<div class="col-lg-8">
+										<select id="select_port" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="port">
+											<option value="">Aucun</option>
+											<?php
+											foreach (jeedom::getUsbMapping() as $name => $value) {
+												echo '<option value="' . $value . '">' . $name . ' (' . $value . ')</option>';
+											}
+											echo '<option value="serie">Modem Série</option>';
+											?>
+										</select>
+										<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modem_serie_addr" style="margin-top:5px;display:none" placeholder="Renseigner le port série (ex : /dev/ttyS0)"/>
+									</div>
+								</div>
 								<div class="form-group" style="display:none">
 									<label class="col-lg-4 control-label">{{Catégorie}}</label>
 									<div class="col-lg-8">
@@ -206,20 +221,6 @@ if($controlerState === ''){
 										</select>
 									</div>
 								</div>-->
-								<div class="form-group"><label class="col-md-3 control-label pull-left">{{Unités d'affichage :}}</label>
-									<div class="col-md-3">
-										<select id="select_port" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="port">
-											<option value="">Aucun</option>
-											<?php
-											foreach (jeedom::getUsbMapping() as $name => $value) {
-												echo '<option value="' . $value . '">' . $name . ' (' . $value . ')</option>';
-											}
-											echo '<option value="serie">Modem Série</option>';
-											?>
-										</select>
-										<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modem_serie_addr" style="margin-top:5px;display:none" placeholder="Renseigner le port série (ex : /dev/ttyS0)"/>
-									</div>
-		
 							</fieldset>
 						</form>
 					</div>
