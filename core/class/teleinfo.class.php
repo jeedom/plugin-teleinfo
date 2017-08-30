@@ -115,38 +115,18 @@ class teleinfo extends eqLogic {
 			return $cmd;
 		}
 	}
-
-	public static function runDeamon($_debug = false) {
-	/*	$modem_serie_addr = config::byKey('port', 'teleinfo');
-		$_2cpt_cartelectronic = config::byKey('2cpt_cartelectronic', 'teleinfo');
-				if(config::byKey('modem_vitesse', 'teleinfo') == ""){
-			$modem_vitesse = '1200';
-		}else{
-			$modem_vitesse = config::byKey('modem_vitesse', 'teleinfo');
-		}
-		if($modem_serie_addr == "serie"){
-			$port = config::byKey('modem_serie_addr', 'teleinfo');
-			goto lancement;
-		}
-		$port = jeedom::getUsbMapping(config::byKey('port', 'teleinfo'));
-		if($_2cpt_cartelectronic == 1){
-				$port = '/dev/ttyUSB1';
-				goto lancement;
-		}*/
-    }
 	
 	public static function deamon_info() {
 		$return = array();
 		$return['log'] = 'teleinfo';	
-		if(config::byKey('port', 'teleinfo')!='')
-			$return['launchable'] = 'ok';
-		else
-			$return['launchable'] = 'nok';
-		$cron = cron::byClassAndFunction('teleinfo', 'pull');
-		if(is_object($cron) && $cron->running())
-			$return['state'] = 'ok';
-		else
-			$return['state'] = 'nok';
+		$return['launchable'] = 'ok';
+		foreach(eqLogic::byType('teleinfo') as $teleinfo){
+			$cron = cron::byClassAndFunction('teleinfo', 'pull', array('id' => $teleinfo->getId()));
+			if(is_object($cron) && $cron->running())
+				$return['state'] = 'ok';
+			else
+				return $return['state'] = 'nok';
+		}
 		return $return;
 	}
 	public static function deamon_start($_debug = false) {
@@ -155,68 +135,67 @@ class teleinfo extends eqLogic {
 			return;
 		log::remove('teleinfo');
 		self::deamon_stop();
-		$cron = cron::byClassAndFunction('teleinfo', 'pull');
-		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('teleinfo');
-			$cron->setFunction('pull');
-			$cron->setEnable(1);
-			$cron->setDeamon(1);
-			$cron->setSchedule('* * * * *');
-			$cron->setTimeout('999999');
-			$cron->save();
+		foreach(eqLogic::byType('teleinfo') as $teleinfo){
+			$cron = cron::byClassAndFunction('teleinfo', 'pull', array('id' => $teleinfo->getId()));
+			if (!is_object($cron)) {
+				$cron = new cron();
+				$cron->setClass('teleinfo');
+				$cron->setFunction('pull');				
+				$cron->setOption(array('id' => $teleinfo->getId()));
+				$cron->setEnable(1);
+				$cron->setDeamon(1);
+				$cron->setSchedule('* * * * *');
+				$cron->setTimeout('999999');
+				$cron->save();
+			}
+			$cron->start();
+			$cron->run();
 		}
-		$cron->start();
-		$cron->run();
 	}
 	public static function deamon_stop() {
-		$cron = cron::byClassAndFunction('teleinfo', 'pull');
-		if (is_object($cron)) {
-			$cron->stop();
-			$cron->remove();
+		foreach(eqLogic::byType('teleinfo') as $teleinfo){
+			$cron = cron::byClassAndFunction('teleinfo', 'pull', array('id' => $teleinfo->getId()));
+			if (is_object($cron)) {
+				$cron->stop();
+				$cron->remove();
+			}
 		}
 	}
 	
 	public static function pull($_options) {
-		$handle = fopen (config::byKey('port', 'teleinfo'), "r"); // ouverture du flux
+		$teleinfo = teleinfo::byId($_option['id']);
+		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
+			$handle = fopen($teleinfo->getConfiguration('port'), "r"); // ouverture du flux
+			if (!$handle)
+				throw new Exception(__($teleinfo->getConfiguration('port')." non trouvé", __FILE__));
+			while(true){
+				while (fread($handle, 1) != chr(2)); // on attend la fin d'une trame pour commencer a avec la trame suivante
+				$char  = '';
+				$trame = '';
 
-		if (!$handle)
-			throw new Exception(__(config::byKey('port', 'teleinfo')." non trouvé", __FILE__));
-		while(true){
-			while (fread($handle, 1) != chr(2)); // on attend la fin d'une trame pour commencer a avec la trame suivante
-
-			$char  = '';
-			$trame = '';
-
-			while ($char != chr(2)) { // on lit tous les caracteres jusqu'a la fin de la trame
-				$char = fread($handle, 1);
-				if ($char != chr(2)){
-					$trame .= $char;
+				while ($char != chr(2)) { // on lit tous les caracteres jusqu'a la fin de la trame
+					$char = fread($handle, 1);
+					if ($char != chr(2)){
+						$trame .= $char;
+					}
 				}
+				log::add('teleinfo','debug',$teleinfo->getHumanName() . ' ' . $trame);
+				$teleinfo->UpdateInfo($trame);
 			}
-			log::add('teleinfo','debug',$trame);
-			self::UpdateInfo($trame);
+			fclose ($handle); // on ferme le flux	
 		}
-		fclose ($handle); // on ferme le flux	
 	}
-	public static function UpdateInfo($trame) {
+	public function UpdateInfo($trame) {
 		$datas = '';
 		$trame = chop(substr($trame,1,-1)); // on supprime les caracteres de debut et fin de trame
-
 		$messages = explode(chr(10), $trame); // on separe les messages de la trame
-
 		foreach ($messages as $key => $message) {
 			$message = explode (' ', $message, 3); // on separe l'etiquette, la valeur et la somme de controle de chaque message
 			if(!empty($message[0]) && !empty($message[1])) {
-				$etiquette = $message[0];
-				$valeur    = $message[1];
-				$datas[$etiquette] = $valeur; // on stock les etiquettes et les valeurs de l'array datas
-			}
-		}
-		$eqLogic= eqLogic::byLogicalId($datas['ADCO']);
-		if(is_object($eqLogic)){
-			foreach($datas as $Cmd => $Value){
-				$eqLogic->checkAndUpdateCmd($Cmd,$Value);
+				if($message[0] == 'ADCO')
+					$this->setLogicalId($message[1]);
+				else
+					$this->checkAndUpdateCmd($message[0],$message[1]);
 			}
 		}
 	}
