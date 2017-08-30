@@ -7,7 +7,5 @@
 	"require" : "2.3",
 	"category" : "automation protocol",
 	"display" : "panel",
-	"hasDependency" : true,
-	"hasOwnDeamon" : true,
-	"maxDependancyInstallTime" : 45
+	"hasOwnDeamon" : true
 }
