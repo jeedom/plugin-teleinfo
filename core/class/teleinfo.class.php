@@ -25,7 +25,6 @@ class teleinfo extends eqLogic {
 	public static function getTeleinfoInfo($_url){
 		return 1;
 	}
-	
 	public static function cron() {
 		if (config::byKey('jeeNetwork::mode') == 'slave') { //Je suis l'esclave
 			if (!self::deamonRunning()) {
@@ -117,102 +116,8 @@ class teleinfo extends eqLogic {
 		}
 	}
 
-	public static function runExternalDeamon($_debug = false) {
-        log::add('teleinfo', 'info', 'Démarrage du service en mode satellite');
-        $teleinfo_path = realpath(dirname(__FILE__) . '/../../ressources');
-		$modem_serie_addr = config::byKey('port', 'teleinfo');
-		$_debug = config::byKey('debug', 'teleinfo');
-		$_force = config::byKey('force', 'teleinfo');
-		$_2cpt_cartelectronic = config::byKey('2cpt_cartelectronic', 'teleinfo');
-
-		if(config::byKey('modem_vitesse', 'teleinfo') == ""){
-			$modem_vitesse = '1200';
-		}else{
-			$modem_vitesse = config::byKey('modem_vitesse', 'teleinfo');
-		}
-		
-		if($modem_serie_addr == "serie"){
-			$port = config::byKey('modem_serie_addr', 'teleinfo');
-			goto lancement;
-		}
-		$port = jeedom::getUsbMapping(config::byKey('port', 'teleinfo'));
-		if($_2cpt_cartelectronic == 1){
-				$port = '/dev/ttyUSB1';
-				goto lancement;
-		}
-        if (!file_exists($port)) {
-				log::add('teleinfo', 'error', 'Le port n\'existe pas');
-				goto end;
-        }
-		lancement:
-		exec('sudo chmod 777 ' . $port . ' > /dev/null 2>&1');
-		$parsed_url = parse_url(config::byKey('jeeNetwork::master::ip'));
-		
-		log::add('teleinfo', 'info', '--------- Informations sur le master --------');
-		log::add('teleinfo', 'info', 'Adresse             : ' . config::byKey('jeeNetwork::master::ip'));
-		log::add('teleinfo', 'info', 'Host / Port         : ' . $parsed_url['host'] . ':' . $parsed_url['port']);
-		log::add('teleinfo', 'info', 'Path complémentaire : ' .  $parsed_url['path']);
-		$ip_externe =  $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . $parsed_url['path'];
-		log::add('teleinfo', 'info', 'Mise en forme pour le service : ' . $ip_externe);
-		log::add('teleinfo', 'info', 'Port modem : ' . $port);
-		log::add('teleinfo', 'info', '---------------------------------------------');
-		if($parsed_url['host'] == ""){
-			$ip_externe = config::byKey('jeeNetwork::master::ip');
-			log::add('teleinfo', 'error', 'Attention, vérifiez que l\'ip est bien renseignée dans la partie Configuration Réseau.');
-		}
-		
-		$cle_api = config::byKey('jeeNetwork::master::apikey');
-		if($cle_api == ''){
-			log::add('teleinfo', 'error', 'Erreur de clé api, veuillez la vérifier.');
-			goto end;
-		}	
-		if($_debug){
-			$_debug = "1";
-		}
-		else{
-			$_debug = "0";
-		}
-		if($_force != "1"){
-			$_force = "0";
-		}
-		if($_2cpt_cartelectronic == 1){
-			log::add('teleinfo', 'info', 'Fonctionnement en mode 2 compteurs');
-			//exec('sudo chmod 777 /dev/bus/usb/* > /dev/null 2>&1');
-			$teleinfo_path = $teleinfo_path . '/teleinfo_2_cpt.py';
-			$cmd = 'sudo nice -n 19 /usr/bin/python ' . $teleinfo_path . ' -d '.$_debug.' -p ' . $port . ' -v ' . $modem_vitesse . ' -e ' . $ip_externe . ' -c ' . config::byKey('jeeNetwork::master::apikey') . ' -f ' . $_force . ' -r ' . realpath(dirname(__FILE__));
-		}
-		else{
-			log::add('teleinfo', 'info', 'Fonctionnement en mode 1 compteur');
-			$teleinfo_path = $teleinfo_path . '/teleinfo.py';
-			$cmd = 'nice -n 19 /usr/bin/python ' . $teleinfo_path . ' -d '.$_debug.' -p ' . $port . ' -v ' . $modem_vitesse . ' -e ' . $ip_externe . ' -c ' . config::byKey('jeeNetwork::master::apikey') . ' -f ' . $_force . ' -r ' . realpath(dirname(__FILE__));
-		}	
-		
-		log::add('teleinfo', 'info', 'Exécution du service : ' . $cmd);
-		$result = exec('nohup ' . $cmd . ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &');
-		if (strpos(strtolower($result), 'error') !== false || strpos(strtolower($result), 'traceback') !== false) {
-			log::add('teleinfo', 'error', $result);
-			return false;
-		}
-		sleep(2);
-		if (!self::deamonRunning()) {
-			sleep(10);
-			if (!self::deamonRunning()) {
-				log::add('teleinfo', 'error', 'Impossible de lancer le démon téléinfo, vérifiez l\'ip', 'unableStartDeamon');
-				return false;
-			}
-		}
-		message::removeAll('teleinfo', 'unableStartDeamon');
-		log::add('teleinfo', 'info', 'Service OK');
-		log::add('teleinfo', 'info', '---------------------------------------------');
-		end:
-    }
-	
 	public static function runDeamon($_debug = false) {
-        log::add('teleinfo', 'info', 'Mode local');
-        $teleinfo_path = realpath(dirname(__FILE__) . '/../../ressources');
-		$modem_serie_addr = config::byKey('port', 'teleinfo');
-		$_debug = config::byKey('debug', 'teleinfo');
-		$_force = config::byKey('force', 'teleinfo');
+	/*	$modem_serie_addr = config::byKey('port', 'teleinfo');
 		$_2cpt_cartelectronic = config::byKey('2cpt_cartelectronic', 'teleinfo');
 				if(config::byKey('modem_vitesse', 'teleinfo') == ""){
 			$modem_vitesse = '1200';
@@ -227,216 +132,94 @@ class teleinfo extends eqLogic {
 		if($_2cpt_cartelectronic == 1){
 				$port = '/dev/ttyUSB1';
 				goto lancement;
-		}
-        if (!file_exists($port)) {
-			log::add('teleinfo', 'error', 'Le port n\'existe pas');
-			goto end;
-        }
-		$cle_api = config::byKey('api');
-		if($cle_api == ''){
-			log::add('teleinfo', 'error', 'Erreur de clé api, veuillez la vérifier.');
-			goto end;
-		}	
-		lancement:
-		$parsed_url = parse_url(config::byKey('internalProtocol','core','http://') . config::byKey('internalAddr','core','127.0.0.1') . ":" . config::byKey('internalPort','core','80') . config::byKey('internalComplement','core'));
-		exec('sudo chmod 777 ' . $port . ' > /dev/null 2>&1');
-		
-		log::add('teleinfo', 'info', '--------- Informations sur le master --------');
-		log::add('teleinfo', 'info', 'Adresse             :' . config::byKey('internalProtocol','core','http://') . config::byKey('internalAddr','core','127.0.0.1') . ":" . config::byKey('internalPort','core','80') . config::byKey('internalComplement','core'));
-		log::add('teleinfo', 'info', 'Host / Port         :' . $parsed_url['host'] . ':' . $parsed_url['port']);
-		log::add('teleinfo', 'info', 'Path complémentaire :' .  $parsed_url['path']);
-		$ip_interne =  $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . $parsed_url['path'];
-		log::add('teleinfo', 'info', 'Mise en forme pour le service : ' . $ip_interne);
-		log::add('teleinfo', 'info', 'Debug : ' . $_debug);
-		log::add('teleinfo', 'info', 'Force : ' . $_force);
-		log::add('teleinfo', 'info', 'Port modem : ' . $port);
-		
-		if($_debug){
-			$_debug = "1";
-		}
-		else{
-			$_debug = "0";
-		}
-		if($_force != "1"){
-			$_force = "0";
-		}
-		log::add('teleinfo', 'info', '---------------------------------------------');
-		
-		if($_2cpt_cartelectronic == 1){
-			log::add('teleinfo', 'info', 'Fonctionnement en mode 2 compteur');
-			//exec('sudo chmod 777 /dev/bus/usb/* > /dev/null 2>&1');
-			$teleinfo_path = $teleinfo_path . '/teleinfo_2_cpt.py';
-			$cmd = 'sudo nice -n 19 /usr/bin/python ' . $teleinfo_path . ' -d '.$_debug.' -p ' . $port . ' -v ' . $modem_vitesse .' -e ' . $ip_interne . ' -c ' . config::byKey('api') . ' -f ' . $_force . ' -r ' . realpath(dirname(__FILE__));
-		}
-		else{
-			log::add('teleinfo', 'info', 'Fonctionnement en mode 1 compteur');
-			$teleinfo_path = $teleinfo_path . '/teleinfo.py';
-			// $cmd = 'sudo nice -n 19 /usr/bin/python ' . $teleinfo_path . ' -d 0 -p ' . $port . ' -v ' . $modem_vitesse . ' -e ' . $ip_interne . ' -c ' . config::byKey('api') . ' -r ' . realpath(dirname(__FILE__));
-			$cmd = 'nice -n 19 /usr/bin/python ' . $teleinfo_path . ' -d '.$_debug.' -p ' . $port . ' -v ' . $modem_vitesse . ' -c ' . config::byKey('api') . ' -f ' . $_force . ' -r ' . realpath(dirname(__FILE__));
-		}
-		
-		log::add('teleinfo', 'info', 'Exécution du service : ' . $cmd);
-		$result = exec('nohup ' . $cmd . ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &');
-		if (strpos(strtolower($result), 'error') !== false || strpos(strtolower($result), 'traceback') !== false) {
-			log::add('teleinfo', 'error', $result);
-			return false;
-		}
-		sleep(2);
-		if (!self::deamonRunning()) {
-			sleep(10);
-			if (!self::deamonRunning()) {
-				log::add('teleinfo', 'error', 'Impossible de lancer le démon téléinfo, vérifiez l\'ip', 'unableStartDeamon');
-				return false;
-			}
-		}
-		message::removeAll('teleinfo', 'unableStartDeamon');
-		log::add('teleinfo', 'info', 'Service OK');
-		log::add('teleinfo', 'info', '---------------------------------------------');
-		end:
-    }
-
-    public static function deamonRunning() {
-		$_2cpt_cartelectronic = config::byKey('2cpt_cartelectronic', 'teleinfo');
-		if($_2cpt_cartelectronic == 1){
-			$result = exec("ps aux | grep teleinfo_2_cpt.py | grep -v grep | awk '{print $2}'");
-			if($result != ""){
-				//log::add('teleinfo', 'info', 'Vérification de l\'état du service : OK ');
-				return true;
-			}
-			log::add('teleinfo', 'info', 'Vérification de l\'état du service : NOK ');
-			return false;
-		}else{
-			$result = exec("ps aux | grep teleinfo.py | grep -v grep | awk '{print $2}'");
-			if($result != ""){
-				//log::add('teleinfo', 'info', 'Vérification de l\'état du service : OK ');
-				return true;
-			}
-			log::add('teleinfo', 'info', 'Vérification de l\'état du service : NOK ');
-			return false;
-		}
+		}*/
     }
 	
 	public static function deamon_info() {
 		$return = array();
-		$return['log'] = 'teleinfo';
-		$return['state'] = 'nok';
-		$pid_file = '/tmp/teleinfo.pid';
-		if (file_exists($pid_file)) {
-			if (posix_getsid(trim(file_get_contents($pid_file)))) {
-				$return['state'] = 'ok';
-			} else {
-				shell_exec('sudo rm -rf ' . $pid_file . ' 2>&1 > /dev/null;rm -rf ' . $pid_file . ' 2>&1 > /dev/null;');
-			}
-		}
-		/*if(self::deamonRunning()){
+		$return['log'] = 'teleinfo';	
+		if(config::byKey('port', 'teleinfo')!='')
+			$return['launchable'] = 'ok';
+		else
+			$return['launchable'] = 'nok';
+		$cron = cron::byClassAndFunction('teleinfo', 'pull');
+		if(is_object($cron) && $cron->running())
 			$return['state'] = 'ok';
-		}*/
-		$return['launchable'] = 'ok';
+		else
+			$return['state'] = 'nok';
 		return $return;
 	}
-	
 	public static function deamon_start($_debug = false) {
-		
-		if (config::byKey('jeeNetwork::mode') == 'slave') { //Je suis l'esclave
-			if (!self::deamonRunning()) {
-                self::runExternalDeamon($_debug);
-            }
-		}
-		else{	// Je suis le jeedom master			
-			if(config::byKey('port', 'teleinfo') != ""){	// Si un port est sélectionné
-				if (!self::deamonRunning()) {
-					self::runDeamon($_debug);
-				}
-				message::removeAll('teleinfo', 'noTeleinfoPort');
-			}
-			else{
-				log::add('teleinfo', 'info', 'Pas d\'informations sur le port USB (Modem série ?)');
-			}
-		}
-	}
-	
-	public static function deamon_stop() {
-		log::add('teleinfo', 'info', '[deamon_stop] Arret du service');
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] == 'ok') {
-			$_2cpt_cartelectronic = config::byKey('2cpt_cartelectronic', 'teleinfo');
-			if($_2cpt_cartelectronic == 1){
-				$result = exec("ps aux | grep teleinfo_2_cpt.py | grep -v grep | awk '{print $2}'");
-				system::kill($result);
-			}
-			else{
-				$pid_file = '/tmp/teleinfo.pid';
-                if (file_exists($pid_file)) {
-                        $pid = intval(trim(file_get_contents($pid_file)));
-						$kill = posix_kill($pid, 15);
-						usleep(500);
-						if ($kill) {
-							return true;
-						}
-						else{
-							system::kill($pid);
-						}
-                }
-                system::kill('teleinfo.py');
-                $port = config::byKey('port', 'teleinfo');
-				if($port != "serie"){
-					$port = jeedom::getUsbMapping(config::byKey('port', 'teleinfo'));
-					system::fuserk(jeedom::getUsbMapping($port));
-					sleep(1);
+		if ($deamon_info['launchable'] != 'ok') 
+			return;
+		log::remove('teleinfo');
+		self::deamon_stop();
+		$cron = cron::byClassAndFunction('teleinfo', 'pull');
+		if (!is_object($cron)) {
+			$cron = new cron();
+			$cron->setClass('teleinfo');
+			$cron->setFunction('pull');
+			$cron->setEnable(1);
+			$cron->setDeamon(1);
+			$cron->setSchedule('* * * * *');
+			$cron->setTimeout('999999');
+			$cron->save();
+		}
+		$cron->start();
+		$cron->run();
+	}
+	public static function deamon_stop() {
+		$cron = cron::byClassAndFunction('teleinfo', 'pull');
+		if (is_object($cron)) {
+			$cron->stop();
+			$cron->remove();
+		}
+	}
+	
+	public static function pull($_options) {
+		$handle = fopen (config::byKey('port', 'teleinfo'), "r"); // ouverture du flux
+
+		if (!$handle)
+			throw new Exception(__(config::byKey('port', 'teleinfo')." non trouvé", __FILE__));
+		while(true){
+			while (fread($handle, 1) != chr(2)); // on attend la fin d'une trame pour commencer a avec la trame suivante
+
+			$char  = '';
+			$trame = '';
+
+			while ($char != chr(2)) { // on lit tous les caracteres jusqu'a la fin de la trame
+				$char = fread($handle, 1);
+				if ($char != chr(2)){
+					$trame .= $char;
 				}
-				//$result = exec("ps aux | grep teleinfo.py | grep -v grep | awk '{print $2}'");
+			}
+			log::add('teleinfo','debug',$trame);
+			self::UpdateInfo($trame);
+		}
+		fclose ($handle); // on ferme le flux	
+	}
+	public static function UpdateInfo($trame) {
+		$datas = '';
+		$trame = chop(substr($trame,1,-1)); // on supprime les caracteres de debut et fin de trame
+
+		$messages = explode(chr(10), $trame); // on separe les messages de la trame
+
+		foreach ($messages as $key => $message) {
+			$message = explode (' ', $message, 3); // on separe l'etiquette, la valeur et la somme de controle de chaque message
+			if(!empty($message[0]) && !empty($message[1])) {
+				$etiquette = $message[0];
+				$valeur    = $message[1];
+				$datas[$etiquette] = $valeur; // on stock les etiquettes et les valeurs de l'array datas
+			}
+		}
+		$eqLogic= eqLogic::byLogicalId($datas['ADCO']);
+		if(is_object($eqLogic)){
+			foreach($datas as $Cmd => $Value){
+				$eqLogic->checkAndUpdateCmd($Cmd,$Value);
 			}
 		}
 	}
-
-    public static function stopDeamon() {
-        if (!self::deamonRunning()) {
-            return true;
-        }
-		
-		log::add('teleinfo', 'info', 'Tentative d\'arrêt du service');
-		
-		$_2cpt_cartelectronic = config::byKey('2cpt_cartelectronic', 'teleinfo');
-		if($_2cpt_cartelectronic == 1){
-			$result = exec("ps aux | grep teleinfo_2_cpt.py | grep -v grep | awk '{print $2}'");
-		}
-		else{
-			$result = exec("ps aux | grep teleinfo.py | grep -v grep | awk '{print $2}'");
-		}
-		//foreach ($result as $pid) {
-		exec('kill ' . $result);
-		//}
-        $check = self::deamonRunning();
-        $retry = 0;
-        while ($check) {
-            $check = self::deamonRunning();
-            $retry++;
-            if ($retry > 10) {
-                $check = false;
-            } else {
-				posix_kill($result, 9);
-                sleep(1);
-            }
-        }
-		try {
-		exec('sudo kill 9 ' . $result . ' > /dev/null 2&1');
-		} catch (Exception $e) {
-			log::add('teleinfo', 'error', 'Impossible d\'arrêter le service');
-		}
-        $check = self::deamonRunning();
-        $retry = 0;
-        while ($check) {
-            $check = self::deamonRunning();
-            $retry++;
-            if ($retry > 10) {
-                $check = false;
-            } else {
-                sleep(1);
-            }
-        }
-        return true;
-    }
-	
 	public static function CalculateTodayStats(){
 		$STAT_TODAY_HP = 0;
 		$STAT_TODAY_HC = 0;
@@ -1288,98 +1071,8 @@ class teleinfo extends eqLogic {
 			$cmd->setIsVisible(1);
 			$cmd->save();
 		}
-		
-	
-	
 	}
-	
-	/*public function toHtml($_version = 'dashboard') 
-	{
-		$_version = jeedom::versionAlias($_version);
-		$replace = array(
-			'#id#' => $this->getId(),
-			'#name#' => ($this->getIsEnable()) ? $this->getName() : '<del>' . $this->getName() . '</del>',
-			'#background_color#' => $this->getBackgroundColor($_version),
-			'#eqLink#' => $this->getLinkToConfiguration(),
-		);
-		if ($this->getIsEnable()) {
-			foreach ($this->getCmd(null, null, true) as $cmd) {
-				 $replace['#'.$cmd->getLogicalId().'#'] = $cmd->toHtml($_version);
-			}
-		}     
-		if ($_version == 'dview' || $_version == 'mview') {
-			$object = $this->getObject();
-			$replace['#name#'] = (is_object($object)) ? $object->getName() . ' - ' . $replace['#name#'] : $replace['#name#'];
-		}
-		
-		//log::add('presence', 'debug', 'HTML : ' . $replace["#name#"]);
-		$parameters = $this->getDisplay('parameters');
-		if (is_array($parameters)) {
-			foreach ($parameters as $key => $value) {
-				$replace['#' . $key . '#'] = $value;
-			}
-		}
-		log::add('presence', 'debug', 'Template sélectionné : ' . $this->getConfiguration('template'););
-	
-		
-		//cache::set('weatherWidget' . $_version . $this->getId(), $html, 0);
 
-		//return template_replace($replace, getTemplate('core', $_version, 'eqLogic','teleinfo'));
-		//return template_replace($replace, getTemplate('core', $_version, 'eqLogic','teleinfo'));
-    }
-    /*     * *********************Methode d'instance************************* */
-
-    /*public function forceUpdate() {
-        foreach ($this->getCmd() as $cmd) {
-            try {
-                $cmd->forceUpdate();
-            } catch (Exception $e) {
-                
-            }
-        }
-        try {
-            //self::callTeleinfo('/teleinfo');
-        } catch (Exception $e) {
-            
-        }
-    }*/
-	
-	
-	
-	/********** MANAGEMENT ZONE ********/
-	public static function dependancy_info() {
-		$return = array();
-		$return['log'] = 'teleinfo_update';
-		$return['progress_file'] = '/tmp/teleinfo_in_progress';
-		$return['state'] = (self::installationOk()) ? 'ok' : 'nok';
-
-		return $return;
-	}
-	
-	public static function installationOk() {	
-		try {
-			$dependances_version = config::byKey('dependancy_version', 'teleinfo', 0);
-			if(intval($dependances_version) >= 1.0){
-				return true;
-			}
-			else{
-				config::save('dependancy_version', 1.0, 'teleinfo');
-				return false;
-			}
-		} catch (Exception $e) {
-            return true;
-        }
-	}
-	
-	public static function dependancy_install() {
-		if (file_exists('/tmp/teleinfo_in_progress')) {
-			return;
-		}
-		log::remove('teleinfo_update');
-		$cmd = 'sudo /bin/bash ' . dirname(__FILE__) . '/../../ressources/install.sh';
-		$cmd .= ' >> ' . log::getPathToLog('teleinfo_update') . ' 2>&1 &';
-		exec($cmd);
-	}
 
 }
 
@@ -1391,3 +1084,4 @@ class teleinfoCmd extends cmd {
 	
     /*     * **********************Getteur Setteur*************************** */
 }
+?>
