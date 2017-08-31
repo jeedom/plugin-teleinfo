@@ -162,6 +162,7 @@ class teleinfo extends eqLogic {
 		$teleinfo = eqLogic::byId($_options['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
 			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
+			//exec("stty -F " . $teleinfo->getPort() . " " . (int) 1200, $out);
 			$handle = fopen($teleinfo->getPort(), "r"); // ouverture du flux
 			if (!$handle)
 				throw new Exception(__($teleinfo->getConfiguration('port')." non trouvé", __FILE__));
