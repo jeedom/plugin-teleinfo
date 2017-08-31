@@ -179,6 +179,8 @@ $eqLogics = eqLogic::byType('teleinfo');
 											echo '<option value="serie">Modem Série</option>';
 											?>
 										</select>
+									</div>
+									<div class="col-lg-8">
 										<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modem_serie_addr" style="margin-top:5px;display:none" placeholder="Renseigner le port série (ex : /dev/ttyS0)"/>
 										<label>{{Utiliser le deuxieme compteur}}</label>
 										<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="2cmpt"/>
@@ -187,9 +189,8 @@ $eqLogics = eqLogic::byType('teleinfo');
 							</fieldset>
 						</form>
 					</div>
-					<div class="col-sm-6 Present">
+					<div class="col-sm-6">
 						<form class="form-horizontal">
-							<legend>Gestion de la présence</legend>
 							<fieldset>
 								<legend>{{Paramètres}}</legend>
 								<div class="form-group">
@@ -250,6 +251,10 @@ $eqLogics = eqLogic::byType('teleinfo');
 					</div>
 				</div>		
 				<div role="tabpanel" class="tab-pane" id="commandtab">	
+				<legend>Commandes</legend>
+					<a class="btn btn-success btn-sm cmdAction" id="addDataToTable"><i class="fa fa-plus-circle"></i> {{Ajouter une donnée}}</a> &nbsp;
+					<a class="btn btn-success btn-sm cmdAction expertModeVisible" id="addStatToTable"><i class="fa fa-plus-circle"></i> {{Ajouter une statistique}}</a><br/><br/>
+
 					<table id="table_cmd" class="table table-bordered table-condensed">
 					    <thead>
 						<tr>
