@@ -192,14 +192,14 @@ class teleinfo extends eqLogic {
 					$this->setLogicalId($message[1]);
 				else
 					$this->checkAndUpdateCmd($message[0],$message[1]);
-           			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': '. $message[0] . ' = '.$message[1] );
+           		log::add('teleinfo','debug',$this->getHumanName() . ': '. $message[0] . ' = '.$message[1] );
 			}
 		}
 	}
 	public function is_valid($message){
 		if(count($message) < 2)
 			return false;
-		if(count($message) == 2){
+		if(count($message) == 2)
 				return true;
 		$my_sum = 0;
 		$datas = str_split(' '.$message[0].$message[1]);
@@ -208,8 +208,7 @@ class teleinfo extends eqLogic {
 		$computed_checksum = ($my_sum & intval("111111", 2) ) + 0x20;
 		if(chr($computed_checksum) == trim($message[2]))
 			return true;
-		else
-			return false;
+		return false;
 	}
 	public function getPort() {
 		$port=$this->getConfiguration('port');
@@ -1063,5 +1062,7 @@ class teleinfoCmd extends cmd {
     public function execute($_options = null) {
         
     }
+	
+    /*     * **********************Getteur Setteur*************************** */
 }
 ?>
