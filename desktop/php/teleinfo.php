@@ -188,21 +188,6 @@ $eqLogics = eqLogic::byType('teleinfo');
 										<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="2cmpt"/>
 									</div>
 								</div>
-									<label class="col-sm-2 control-label" >
-										{{Gestions}}
-										<sup>
-											<i class="fa fa-question-circle tooltips" title="Choisissez les types de gestions que vous souhaitez pour cette zone" style="font-size : 1em;color:grey;"></i>
-										</sup>
-									</label>
-									<div class="col-sm-8">
-										<label>{{Jour / Nuit}}</label>
-										<input type="checkbox" class="eqLogicAttr" data-label-text="{{Jour / Nuit}}" data-l1key="configuration" data-l2key="DayNight" checked/>
-										<label>{{Position du soleil}}</label>
-										<input type="checkbox" class="eqLogicAttr" data-label-text="{{Position du soleil}}" data-l1key="configuration" data-l2key="Helioptrope" checked/>
-										<label>{{Présences}}</label>
-										<input type="checkbox" class="eqLogicAttr" data-label-text="{{Présences}}" data-l1key="configuration" data-l2key="Present" checked/>
-									</div>
-								</div>	
 							</fieldset>
 						</form>
 					</div>
@@ -210,7 +195,7 @@ $eqLogics = eqLogic::byType('teleinfo');
 						<form class="form-horizontal">
 							<legend>Gestion de la présence</legend>
 							<fieldset>
-	<legend>{{Paramètres}}</legend>
+								<legend>{{Paramètres}}</legend>
 								<div class="form-group">
 									<div class="col-lg-12">
 										<p>{{Attention, il est nécessaire d'activer l'historisation des index pour utiliser les statistiques}}</p>
