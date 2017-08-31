@@ -163,30 +163,33 @@ class teleinfo extends eqLogic {
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
 			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
 			//$ret = exec("stty -F " . $teleinfo->getPort() . " " . (int) 1200, $out);
-          	$handle = fopen($teleinfo->getPort(), "r"); // ouverture du flux
+          		$handle = @fopen($teleinfo->getPort(), "r");
 			if (!$handle)
-				throw new Exception(__($teleinfo->getConfiguration('port')." non trouvé", __FILE__));
-          while(true){
-				while (fread($handle, 1) != chr(2)); // on attend la fin d'une trame pour commencer a avec la trame suivante
+				throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
+			// on attend la fin d'une trame pour commencer a avec la trame suivante
+          		while (@fread($handle, 1) != chr(0x02)); 
+			while (!feof($handle)) {
 				$char  = '';
-				$trame = '';
-				while ($char != chr(2)) { // on lit tous les caracteres jusqu'a la fin de la trame
-					$char = fread($handle, 1);
-					if ($char != chr(2)){
+				$trame = ''; 
+				// on lit tous les caracteres jusqu'a la fin de la trame
+				while ($char != chr(0x02)) {
+					$char = @fread($handle, 1);
+					if ($char != chr(0x02)){
 						$trame .= $char;
 					}
 				}
+              			$trame=trim($trame);
 				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
 				$teleinfo->UpdateInfo($trame);
 			}
-			fclose ($handle); // on ferme le flux	
+			fclose ($handle);	
 		}
 	}
 	public function UpdateInfo($trame) {
 		$datas = '';
 		$trame=str_replace (chr(0x03),'',$trame);
 		foreach (explode(chr(0x0A), $trame) as $key => $message) {
-			$message = explode (' ', $message, 3); // on separe l'etiquette, la valeur et la somme de controle de chaque message
+			$message = explode (' ', $message, 3);
 			if($this->is_valid($message)){
 				if($message[0] == 'ADCO')
 					$this->setLogicalId($message[1]);
