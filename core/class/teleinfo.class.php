@@ -187,7 +187,7 @@ class teleinfo extends eqLogic {
 		$messages = explode(chr(10), $trame); // on separe les messages de la trame
 		foreach ($messages as $key => $message) {
 			$message = explode (' ', $message, 3); // on separe l'etiquette, la valeur et la somme de controle de chaque message
-			if(!empty($message[0]) && !empty($message[1])) {
+			if($this->is_valid($message){
 				if($message[0] == 'ADCO')
 					$this->setLogicalId($message[1]);
 				else
@@ -195,7 +195,23 @@ class teleinfo extends eqLogic {
 			}
 		}
 	}
-	
+	public function is_valid($message){
+		if(count($message) < 2)
+			return false;
+		if(count($message) == 2)
+			return true;
+		$my_sum = 0;
+		$my_sum += ord($message[0]);
+		$my_sum += ord($message[1]);
+		$computed_checksum = ($my_sum & intval("111111", 2) ) + 0x20;
+		if(chr($computed_checksum) == $checksum){
+			log::add('teleinfo','debug',$teleinfo->getHumanName() .$datas[0] . ' Checksum valide');
+			return true;
+		}else{
+			log::add('teleinfo','debug',$teleinfo->getHumanName() .$datas[0] . ' Checksum invalide');
+			return false;
+		}
+	}
 	public function getPort() {
 		$port=$this->getConfiguration('port');
 		if($port == 'serie')
