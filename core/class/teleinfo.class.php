@@ -162,11 +162,11 @@ class teleinfo extends eqLogic {
 		$teleinfo = eqLogic::byId($_options['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
 			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
-			//exec("stty -F " . $teleinfo->getPort() . " " . (int) 1200, $out);
-			$handle = fopen($teleinfo->getPort(), "r"); // ouverture du flux
+			//$ret = exec("stty -F " . $teleinfo->getPort() . " " . (int) 1200, $out);
+          	$handle = fopen($teleinfo->getPort(), "r"); // ouverture du flux
 			if (!$handle)
 				throw new Exception(__($teleinfo->getConfiguration('port')." non trouvé", __FILE__));
-			while(true){
+          while(true){
 				while (fread($handle, 1) != chr(2)); // on attend la fin d'une trame pour commencer a avec la trame suivante
 				$char  = '';
 				$trame = '';
@@ -176,7 +176,7 @@ class teleinfo extends eqLogic {
 						$trame .= $char;
 					}
 				}
-				//log::add('teleinfo','debug',$teleinfo->getHumanName() . ' ' . $trame);
+				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
 				$teleinfo->UpdateInfo($trame);
 			}
 			fclose ($handle); // on ferme le flux	
@@ -184,15 +184,15 @@ class teleinfo extends eqLogic {
 	}
 	public function UpdateInfo($trame) {
 		$datas = '';
-		$trame = chop(substr($trame,1,-1)); // on supprime les caracteres de debut et fin de trame
-		$messages = explode(chr(10), $trame); // on separe les messages de la trame
-		foreach ($messages as $key => $message) {
+		$trame=str_replace (chr(0x03),'',$trame);
+		foreach (explode(chr(0x0A), $trame) as $key => $message) {
 			$message = explode (' ', $message, 3); // on separe l'etiquette, la valeur et la somme de controle de chaque message
 			if($this->is_valid($message)){
 				if($message[0] == 'ADCO')
 					$this->setLogicalId($message[1]);
 				else
 					$this->checkAndUpdateCmd($message[0],$message[1]);
+           			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': '. $message[0] . ' = '.$message[1] );
 			}
 		}
 	}
@@ -200,21 +200,16 @@ class teleinfo extends eqLogic {
 		if(count($message) < 2)
 			return false;
 		if(count($message) == 2){
-			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . '='.$message[1] . ' Aucun checksum');
-			return true;
-		}
+				return true;
 		$my_sum = 0;
 		$datas = str_split(' '.$message[0].$message[1]);
 		foreach($datas as $cks)
           		$my_sum += ord($cks);
 		$computed_checksum = ($my_sum & intval("111111", 2) ) + 0x20;
-		if(chr($computed_checksum) == trim($message[2])){
-			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . '='.$message[1] . ' Checksum valide');
+		if(chr($computed_checksum) == trim($message[2]))
 			return true;
-		}else{
-			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . '='.$message[1] . ' Checksum invalide');
+		else
 			return false;
-		}
 	}
 	public function getPort() {
 		$port=$this->getConfiguration('port');
@@ -1068,7 +1063,5 @@ class teleinfoCmd extends cmd {
     public function execute($_options = null) {
         
     }
-	
-    /*     * **********************Getteur Setteur*************************** */
 }
 ?>
