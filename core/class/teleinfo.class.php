@@ -164,7 +164,7 @@ class teleinfo extends eqLogic {
 	public static function pull($_options) {
 		$teleinfo = teleinfo::byId($_option['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
-			$handle = fopen($teleinfo->getConfiguration('port'), "r"); // ouverture du flux
+			$handle = fopen($teleinfo->getPort(), "r"); // ouverture du flux
 			if (!$handle)
 				throw new Exception(__($teleinfo->getConfiguration('port')." non trouvé", __FILE__));
 			while(true){
@@ -197,6 +197,17 @@ class teleinfo extends eqLogic {
 					$this->checkAndUpdateCmd($message[0],$message[1]);
 			}
 		}
+	}
+	
+	public function getPort() {
+		$port=$this->getConfiguration('port');
+		if($port == 'serie')
+			$port=$teleinfo->getConfiguration('modem_serie_addr');
+		elseif($this->getConfiguration('2cmpt')){
+			$nb=substr($port,-1)+1;
+			$port='/dev/ttyUSB'.$nb;
+		}
+		return $port;
 	}
 	public static function CalculateTodayStats(){
 		$STAT_TODAY_HP = 0;
