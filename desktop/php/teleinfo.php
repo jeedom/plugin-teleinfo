@@ -94,23 +94,23 @@ $eqLogics = eqLogic::byType('teleinfo');
 							<legend>Général</legend>
 							<fieldset>
 								<div class="form-group ">
-									<label class="col-sm-2 control-label">{{Nom de l'équipement}}
+									<label class="col-lg-4 control-label">{{Nom de l'équipement}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Indiquer le nom de votre zone" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-sm-5">
+									<div class="col-lg-8">
 										<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
 										<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom du groupe de zones}}"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-2 control-label" >{{Objet parent}}
+									<label class="col-lg-4 control-label">{{Objet parent}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Indiquer l'objet dans lequel le widget de cette zone apparaîtra sur le Dashboard" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-sm-5">
+									<div class="col-lg-8">
 										<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 											<option value="">{{Aucun}}</option>
 											<?php
@@ -121,14 +121,14 @@ $eqLogics = eqLogic::byType('teleinfo');
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-md-2 control-label">
+									<label class="col-lg-4 control-label">
 										{{Catégorie}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Choisissez une catégorie
 	Cette information n'est pas obigatoire mais peut être utile pour filtrer les widgets" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-md-8">
+									<div class="col-lg-8">
 										<?php
 										foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
 											echo '<label class="checkbox-inline">';
@@ -140,7 +140,7 @@ $eqLogics = eqLogic::byType('teleinfo');
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-2 control-label" >
+									<label class="col-lg-4 control-label">
 										{{Etat du widget}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Choisissez les options de visibilité et d'activation
@@ -148,7 +148,7 @@ $eqLogics = eqLogic::byType('teleinfo');
 	Si l'équipement n'est pas visible, il sera caché sur le Dashboard" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-sm-5">
+									<div class="col-lg-8">
 										<label>{{Activer}}</label>
 										<input type="checkbox" class="eqLogicAttr" data-label-text="{{Activer}}" data-l1key="isEnable" checked/>
 										<label>{{Visible}}</label>
