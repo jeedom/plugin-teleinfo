@@ -191,20 +191,21 @@ class teleinfo extends eqLogic {
 		foreach (explode(chr(0x0A), $trame) as $key => $message) {
 			$message = explode (' ', $message, 3);
 			if($this->is_valid($message)){
-				switch($message[0]){
+				$param=trim($message[0]);
+				$value=trim($message[1]);
+				switch($param){
 					case 'ADCO':
-						$this->setLogicalId($message[1]);
+						$this->setLogicalId($value);
 					break;
 					case 'PTEC':
-						$value=$message[1];
 						$value=substr($value,2);
-						$this->checkAndUpdateCmd($message[0],$value);
+						$this->checkAndUpdateCmd($param,$value);
 					break;
 					default:
-						$this->checkAndUpdateCmd($message[0],$message[1]);
+						$this->checkAndUpdateCmd($param,$value);
 					break;
 				}
-           			log::add('teleinfo','debug',$this->getHumanName() . ': '. $message[0] . ' = '.$message[1] );
+           			log::add('teleinfo','debug',$this->getHumanName() . ': '. $param . ' = '.$value);
 			}
 		}
 	}
