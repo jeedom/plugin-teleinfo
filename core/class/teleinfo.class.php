@@ -198,7 +198,7 @@ class teleinfo extends eqLogic {
 						$this->setLogicalId($value);
 					break;
 					case 'PTEC':
-						$value=substr($value,2);
+						$value=substr($value,0,2);
 						$this->checkAndUpdateCmd($param,$value);
 					break;
 					default:
