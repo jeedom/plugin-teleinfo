@@ -205,10 +205,10 @@ class teleinfo extends eqLogic {
 		$my_sum += ord($message[1]);
 		$computed_checksum = ($my_sum & intval("111111", 2) ) + 0x20;
 		if(chr($computed_checksum) == $checksum){
-			log::add('teleinfo','debug',$teleinfo->getHumanName() .$datas[0] . ' Checksum valide');
+			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . ' Checksum valide');
 			return true;
 		}else{
-			log::add('teleinfo','debug',$teleinfo->getHumanName() .$datas[0] . ' Checksum invalide');
+			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . ' Checksum invalide');
 			return false;
 		}
 	}
