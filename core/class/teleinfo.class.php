@@ -198,17 +198,20 @@ class teleinfo extends eqLogic {
 	public function is_valid($message){
 		if(count($message) < 2)
 			return false;
-		if(count($message) == 2)
+		if(count($message) == 2){
+			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . '='.$message[1] . ' Aucun checksum');
 			return true;
+		}
 		$my_sum = 0;
-		$my_sum += ord($message[0]);
-		$my_sum += ord($message[1]);
+		$datas = str_split(' '.$message[0].$message[1]);
+		foreach($datas as $cks)
+          		$my_sum += ord($cks);
 		$computed_checksum = ($my_sum & intval("111111", 2) ) + 0x20;
-		if(chr($computed_checksum) == $checksum){
-			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . ' Checksum valide');
+		if(chr($computed_checksum) == trim($message[2])){
+			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . '='.$message[1] . ' Checksum valide');
 			return true;
 		}else{
-			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . ' Checksum invalide');
+			log::add('teleinfo','debug',$this->getHumanName() .$message[0] . '='.$message[1] . ' Checksum invalide');
 			return false;
 		}
 	}
