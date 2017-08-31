@@ -159,7 +159,7 @@ class teleinfo extends eqLogic {
 	}
 	
 	public static function pull($_options) {
-		$teleinfo = eqLogic::byId($_option['id']);
+		$teleinfo = eqLogic::byId($_options['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
 			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
 			$handle = fopen($teleinfo->getPort(), "r"); // ouverture du flux
