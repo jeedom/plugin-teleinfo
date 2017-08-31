@@ -175,7 +175,7 @@ class teleinfo extends eqLogic {
 						$trame .= $char;
 					}
 				}
-				log::add('teleinfo','debug',$teleinfo->getHumanName() . ' ' . $trame);
+				//log::add('teleinfo','debug',$teleinfo->getHumanName() . ' ' . $trame);
 				$teleinfo->UpdateInfo($trame);
 			}
 			fclose ($handle); // on ferme le flux	
