@@ -187,7 +187,7 @@ class teleinfo extends eqLogic {
 		$messages = explode(chr(10), $trame); // on separe les messages de la trame
 		foreach ($messages as $key => $message) {
 			$message = explode (' ', $message, 3); // on separe l'etiquette, la valeur et la somme de controle de chaque message
-			if($this->is_valid($message){
+			if($this->is_valid($message)){
 				if($message[0] == 'ADCO')
 					$this->setLogicalId($message[1]);
 				else
