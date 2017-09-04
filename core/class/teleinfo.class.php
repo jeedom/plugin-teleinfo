@@ -185,12 +185,9 @@ class teleinfo extends eqLogic {
 					break;
 					case 'PTEC':
 						$value=substr($value,0,2);
-						$this->checkAndUpdateCmd($param,$value);
-					break;
-					default:
-						$this->checkAndUpdateCmd($param,$value);
 					break;
 				}
+				$this->checkAndUpdateCmd($param,$value);
            			log::add('teleinfo','debug',$this->getHumanName() . ': '. $param . ' = '.$value);
 			}
 		}
