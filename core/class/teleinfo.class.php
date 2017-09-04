@@ -17,29 +17,16 @@
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class teleinfo extends eqLogic {
-    /*     * *************************Attributs****************************** */
-    /*     * ***********************Methode static*************************** */
 	public static function getTeleinfoInfo($_url){
 		return 1;
 	}
 	public static function cron() {
-		if (config::byKey('jeeNetwork::mode') == 'slave') { //Je suis l'esclave
-			if (!self::deamonRunning()) {
-                self::runExternalDeamon();
-            }
-		}
-		else{	// Je suis le jeedom master			
-			self::Calculate_PAPP();
-		}
-    }
-	
-	public static function cronHourly() {
-		if (config::byKey('jeeNetwork::mode') == 'master') {
-			self::Moy_Last_Hour();
-		}
+		self::Calculate_PAPP();
 	}
 	
-	
+	public static function cronHourly() {
+		self::Moy_Last_Hour();
+	}
 	public static function createFromDef($_def) {
 		if (!isset($_def['ADCO'])) {
 			log::add('teleinfo', 'info', 'Information manquante pour ajouter l\'équipement : ' . print_r($_def, true));
@@ -58,7 +45,6 @@ class teleinfo extends eqLogic {
 		//$eqLogic->applyModuleConfiguration();
 		return $eqLogic;
 	}
-	
 	public static function createCmdFromDef($_oADCO, $_oKey, $_oValue) {
 		if (!isset($_oKey)) {
 			log::add('teleinfo', 'error', 'Information manquante pour ajouter l\'équipement : ' . print_r($_oKey, true));
@@ -85,24 +71,24 @@ class teleinfo extends eqLogic {
 			$cmd->setType('info');
 			$cmd->setConfiguration('info_conso', $_oKey);
 			switch ($_oKey) {
-							case "PAPP":
-								$cmd->setDisplay('generic_type','GENERIC_INFO');
-								$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
-								$cmd->setSubType('string');
-								break;
-							case "OPTARIF":
-							case "HHPHC":
-							case "PPOT":
-							case "PEJP":
-							case "DEMAIN":
-								$cmd->setSubType('string');
-								$cmd->setDisplay('generic_type','GENERIC_INFO');
-								break;
-							default:
-								$cmd->setSubType('numeric');
-								$cmd->setDisplay('generic_type','GENERIC_INFO');
-							break;	
-						}		
+				case "PAPP":
+					$cmd->setDisplay('generic_type','GENERIC_INFO');
+					$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
+					$cmd->setSubType('string');
+					break;
+				case "OPTARIF":
+				case "HHPHC":
+				case "PPOT":
+				case "PEJP":
+				case "DEMAIN":
+					$cmd->setSubType('string');
+					$cmd->setDisplay('generic_type','GENERIC_INFO');
+					break;
+				default:
+					$cmd->setSubType('numeric');
+					$cmd->setDisplay('generic_type','GENERIC_INFO');
+				break;	
+			}		
 			$cmd->setIsHistorized(1);
 			$cmd->setEventOnly(1);
 			$cmd->setIsVisible(1);
@@ -210,10 +196,8 @@ class teleinfo extends eqLogic {
 		}
 	}
 	public function is_valid($message){
-		if(count($message) < 2)
+		if(count($message) < 3)
 			return false;
-		if(count($message) == 2)
-				return true;
 		$my_sum = 0;
 		$datas = str_split(' '.$message[0].$message[1]);
 		foreach($datas as $cks)
