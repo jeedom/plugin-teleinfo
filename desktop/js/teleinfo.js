@@ -15,30 +15,6 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$('#bt_stopTeleinfoDaemon').on('click', function() {
-    stopTeleinfoDeamon();
-});
-
-function stopTeleinfoDeamon() {
-    $.ajax({// fonction permettant de faire de l'ajax
-        type: "POST", // methode de transmission des données au fichier php
-        url: "plugins/teleinfo/core/ajax/teleinfo.ajax.php", // url du fichier php
-        data: {
-            action: "stopDeamon",
-        },
-        dataType: 'json',
-        error: function(request, status, error) {
-            handleAjaxError(request, status, error);
-        },
-        success: function(data) { // si l'appel a bien fonctionné
-            if (data.state != 'ok') {
-                $('#div_alert').showAlert({message: data.result, level: 'danger'});
-                return;
-            }
-            $('#div_alert').showAlert({message: 'Le démon a été correctement arrêté : il se relancera automatiquement dans 1 minute', level: 'success'});
-        }
-    });
-}
 $('.eqLogicAttr[data-l1key=configuration][data-l2key=port]').on('change', function() {
 	if($(this).val() == 'serie')
 		$('.eqLogicAttr[data-l1key=configuration][data-l2key=modem_serie_addr]').show();
@@ -92,7 +68,7 @@ function addCmdToTable(_cmd) {
 	var type_of_data = init(_cmd.configuration['type']);
 	//alert(type_of_data);
 	if(init(_cmd.configuration['type']) == 'stat' || init(_cmd.configuration['type']) == 'panel'){
-		selRequestType = '<select style="width : 220px;" class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="info_conso">';
+		selRequestType = '<select style="width : 220px;" class="cmdAttr form-control input-sm" data-l1key="logicalId">';
 		selRequestType += '<option value="AUCUN">Aucune</option>';
 		selRequestType += '<option value="STAT_YESTERDAY">Conso totale hier</option>';
 		selRequestType += '<option value="STAT_YESTERDAY_HP">Conso HP hier</option>';
@@ -133,7 +109,7 @@ function addCmdToTable(_cmd) {
 		selRequestType += '</select>';
 	}
 	else{
-	selRequestType = '<select style="width : 220px;" class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="info_conso">';
+	selRequestType = '<select style="width : 220px;" class="cmdAttr form-control input-sm" data-l1key="logicalId">';
 	selRequestType += '<option value="BASE">Index (BASE)</option>';
 	selRequestType += '<option value="HCHP">Index heures pleines (BLEU)</option>';
  	selRequestType += '<option value="HCHC">Index heures creuses (BLEU)</option>';
@@ -199,7 +175,7 @@ function addCmdToTable(_cmd) {
         tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
         
-		if(init(_cmd.configuration['info_conso']) == 'TENDANCE_DAY'){
+		if(init(_cmd.logicalId) == 'TENDANCE_DAY'){
 			tr += '<span><input type="checkbox" class="cmdAttr tooltips" title="Spécifie si le calcul de la tendance se fait sur la journée entière ou sur la plage jusqu\'à l\'heure actuelle." data-l1key="configuration" data-l2key="type_calcul_tendance"/> {{Journée entière}}<br/></span>';
 		}		
 		
@@ -209,7 +185,7 @@ function addCmdToTable(_cmd) {
         tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Borne minimum de la valeur}}" style="width : 40%;display : inline-block;"> ';
         tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Borne maximum de la valeur}}" style="width : 40%;display : inline-block;">';
 		
-		if(init(_cmd.configuration['info_conso']) == 'ADPS' || init(_cmd.configuration['info_conso']) == 'ADIR1' || init(_cmd.configuration['info_conso']) == 'ADIR2' || init(_cmd.configuration['info_conso']) == 'ADIR3'){
+		if(init(_cmd.logicalId) == 'ADPS' || init(_cmd.logicalId) == 'ADIR1' || init(_cmd.logicalId) == 'ADIR2' || init(_cmd.logicalId) == 'ADIR3'){
 			//tr += '<input class="cmdAttr form-control input-sm" data-l1key="logicalId" value="0">';
 			tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="returnStateValue" placeholder="{{Valeur retour d\'état}}" style="margin-top : 5px;">';
 			tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="returnStateTime" placeholder="{{Durée avant retour d\'état (min)}}" style="margin-top : 5px;">';
@@ -224,16 +200,16 @@ function addCmdToTable(_cmd) {
         tr += '<i class="fa fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i></td>';
         tr += '</tr>';
 		
-		if (isset(_cmd.configuration.info_conso)) {
-        //$('#table_cmd tbody tr:last .cmdAttr[data-l1key=configuration][data-l2key=info_conso]').value(init(_cmd.configuration.info_conso));
-        //$('#table_cmd tbody tr:last .cmdAttr[data-l1key=configuration][data-l2key=info_conso]').trigger('change');
+		if (isset(_cmd.logicalId)) {
+        //$('#table_cmd tbody tr:last .cmdAttr[data-l1key=logicalId]').value(init(_cmd.logicalId));
+        //$('#table_cmd tbody tr:last .cmdAttr[data-l1key=logicalId]').trigger('change');
 		}
 	
 	    $('#table_cmd tbody').append(tr);
         $('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
 		var tr = $('#table_cmd tbody tr:last');
 		if(init(_cmd.unite) == ''){
-			if(init(_cmd.configuration['info_conso']) == 'ADPS'){
+			if(init(_cmd.logicalId) == 'ADPS'){
 				tr.find('.cmdAttr[data-l1key=unite]').append("A"); 
 				tr.setValues(_cmd, '.cmdAttr');
 			}
