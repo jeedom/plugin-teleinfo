@@ -148,18 +148,20 @@ class teleinfo extends eqLogic {
 		$teleinfo = eqLogic::byId($_options['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
 			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
-			//$ret = exec("stty -F " . $teleinfo->getPort() . " " . (int) 1200, $out);
-          		$handle = @fopen($teleinfo->getPort(), "r");
+			$cmd="stty -F " . $teleinfo->getPort() . " speed 1200 cs7 evenp cstopb";
+          		$cmd .= ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &';
+			exec($cmd);
+          		$handle = fopen($teleinfo->getPort(), "r");
 			if (!$handle)
 				throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
 			// on attend la fin d'une trame pour commencer a avec la trame suivante
-          		while (@fread($handle, 1) != chr(0x02)); 
-			while (!feof($handle)) {
+          		while (fread($handle, 1) != chr(0x02)); 
+			while (true) {
 				$char  = '';
 				$trame = ''; 
 				// on lit tous les caracteres jusqu'a la fin de la trame
 				while ($char != chr(0x02)) {
-					$char = @fread($handle, 1);
+					$char = fread($handle, 1);
 					if ($char != chr(0x02)){
 						$trame .= $char;
 					}
