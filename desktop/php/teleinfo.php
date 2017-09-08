@@ -180,11 +180,11 @@ $eqLogics = eqLogic::byType('teleinfo');
 											?>
 										</select>
 									</div>
-									<div class="col-lg-8">
+									<!--div class="col-lg-8">
 										<input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="modem_serie_addr" style="margin-top:5px;display:none" placeholder="Renseigner le port série (ex : /dev/ttyS0)"/>
 										<label>{{Utiliser le deuxieme compteur}}</label>
 										<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="2cmpt"/>
-									</div>
+									</div-->
 								</div>
 							</fieldset>
 						</form>
