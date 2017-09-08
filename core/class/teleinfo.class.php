@@ -210,10 +210,10 @@ class teleinfo extends eqLogic {
 		$port=$this->getConfiguration('port');
 		if($port == 'serie')
 			$port=$teleinfo->getConfiguration('modem_serie_addr');
-		elseif($this->getConfiguration('2cmpt')){
+		/*elseif($this->getConfiguration('2cmpt')){
 			$nb=substr($port,-1)+1;
 			$port='/dev/ttyUSB'.$nb;
-		}
+		}*/
 		return $port;
 	}
 	public static function CalculateTodayStats(){
