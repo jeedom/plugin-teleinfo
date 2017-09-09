@@ -551,7 +551,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <p>Index (Base / Heures Pleines / Heures Creuses)</p>
 </li>
 <li>
-<p>Index (Heures Normales / Heures de pointe mobile / Heures Pleines Bleu / Heures Creuses Bleu / Heures Pleine Blanc / Heures Creuses Blanc / Heures Pleines Rouge / Heures Creuses Rouge)</p>
+<p>Index (Heures Normales / Heures de pointe mobile / Heures Pleines Bleu / Heures Creuses Bleu / Heures Pleines Blanc / Heures Creuses Blanc / Heures Pleines Rouge / Heures Creuses Rouge)</p>
 </li>
 <li>
 <p>Tranche tarifaire</p>
@@ -575,7 +575,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <p>Préavis EJP (30 minutes avant)</p>
 </li>
 <li>
-<p>Couleur EJP lendemin.</p>
+<p>Couleur EJP lendemain.</p>
 </li>
 </ul>
 </div>
@@ -584,7 +584,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <div class="sect2">
 <h3 id="_les_statistiques">1.7. Les statistiques</h3>
 <div class="paragraph">
-<p>Afin d&#8217;obtenir des informations sur une durée plus longue des statistiques ont étés ajoutées.</p>
+<p>Afin d&#8217;obtenir des informations sur une durée plus longue, des statistiques ont été ajoutées.</p>
 </div>
 <div class="paragraph">
 <p>Ces statistiques correspondent aux informations suivantes :</p>
@@ -607,7 +607,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <p>Tendance journalière de la consommation (Pour être informé si l&#8217;on consomme plus ou moins par rapport au jour précédent à la même heure)</p>
 </li>
 <li>
-<p>Puissance apparente : Certains compteurs ne renvoie pas l&#8217;information PAPP. Pour cela un calcul à été implémenté afin d&#8217;obtenir une moyenne de consommation en W toutes les minutes.</p>
+<p>Puissance apparente : Certains compteurs ne renvoient pas l&#8217;information PAPP. Pour cela, un calcul a été implémenté afin d&#8217;obtenir une moyenne de consommation en W toutes les minutes.</p>
 </li>
 </ul>
 </div>
@@ -636,7 +636,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <p>Type d&#8217;abonnement : Chaîne de caractères.</p>
 </li>
 <li>
-<p>Le préavis EJP et la couleur du lendemn : Chaîne de caractères.</p>
+<p>Le préavis EJP et la couleur du lendemain : Chaîne de caractères.</p>
 </li>
 <li>
 <p>La conso moyenne sur la dernière minute : Watt</p>
@@ -651,7 +651,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <p>Il est possible de vérifier la réception des données avant traitement.</p>
 </div>
 <div class="paragraph">
-<p>Pour cela rendez vous sur l&#8217;objet téléinfo puis cliquez sur Santé</p>
+<p>Pour cela, rendez vous sur l&#8217;objet téléinfo puis cliquez sur Santé</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -673,7 +673,7 @@ Cliquez dessus et sélectionnez "Création automatique des commandes" en haut à
 <div class="paragraph">
 <p>Le plugin téléinfo met à disposition une api afin de mettre à jour les données depuis d&#8217;autres systèmes.
 Il s&#8217;agit d&#8217;une URL d&#8217;appel de type GET.
-Pour y accéder ces informations sont obligatoires :</p>
+Pour y accéder, ces informations sont obligatoires :</p>
 </div>
 <div class="paragraph">
 <p>URL = http://<span class="red">IP_JEEDOM</span>: <span class="blue">PORT_JEEDOM</span>/jeedom/plugins/teleinfo/core/php/jeeTeleinfo.php?api=<span class="green">VOTRE_API_JEEDOM</span>&amp;ADCO=<span class="grey">IDENTIFIANT_DU_COMPTEUR</span></p>
@@ -696,10 +696,10 @@ Pour y accéder ces informations sont obligatoires :</p>
 <p><span class="grey">IDENTIFIANT_DU_COMPTEUR</span> correspond à l&#8217;ADCO de celui-ci. Cette information est obligatoirement transmise par le compteur lorsque vous recevez une trame.</p>
 </div>
 <div class="paragraph">
-<p>Attention le /jeedom peux être différent si vous êtes sur une installation DIY ou OEM. En règle générale il faut l&#8217;ajouter.</p>
+<p>Attention le /jeedom peux être différent si vous êtes sur une installation DIY ou OEM. En règle générale, il faut l&#8217;ajouter.</p>
 </div>
 <div class="paragraph">
-<p>A cette url d&#8217;appel vous pouvez ajouter les différentes valeurs suivant le format : &amp;#NOM_DE_LA_VALEUR#=<mark>VALEUR</mark></p>
+<p>A cette url d&#8217;appel, vous pouvez ajouter les différentes valeurs suivant le format : &amp;#NOM_DE_LA_VALEUR#=<mark>VALEUR</mark></p>
 </div>
 <div class="paragraph">
 <p>Par exemple pour l&#8217;index d&#8217;un abonnement BASE EDF équivalent à 123456789 :</p>
@@ -708,7 +708,7 @@ Pour y accéder ces informations sont obligatoires :</p>
 <p><strong>&amp;BASE=123456789</strong></p>
 </div>
 <div class="paragraph">
-<p>L&#8217;URL sera donc surchargée de toutes information utile.</p>
+<p>L&#8217;URL sera donc surchargée de toute information utile.</p>
 </div>
 <div class="paragraph">
 <p>Par exemple :</p>
@@ -732,7 +732,7 @@ Pour y accéder ces informations sont obligatoires :</p>
 <p>Donnera l&#8217;URL : <a href="http://192.168.1.15:80/jeedom/plugins/teleinfo/core/php/jeeTeleinfo.php?api=zertyuiolkjhgfdsxc&amp;ADCO=0095123657*&amp;BASE=123456789*" class="bare">http://192.168.1.15:80/jeedom/plugins/teleinfo/core/php/jeeTeleinfo.php?api=zertyuiolkjhgfdsxc&amp;ADCO=0095123657*&amp;BASE=123456789*</a></p>
 </div>
 <div class="paragraph">
-<p>Il est possible d&#8217;envoyer toutes les informations transmises par les compteurs suivant les étiquettes définie par la norme.</p>
+<p>Il est possible d&#8217;envoyer toutes les informations transmises par les compteurs suivant les étiquettes définies par la norme.</p>
 </div>
 <div class="paragraph">
 <p>Quelques unes (Les plus connues) :</p>
@@ -798,7 +798,7 @@ ATTENTION ! Je vous conseille de lire le forum en premier afin d&#8217;être sû
 <p>-faire un scan (loupe) pour rechercher les modules USB</p>
 </div>
 <div class="paragraph">
-<p>-une fois le module trouvé aller dans FILE &#8594; OPEN TEMPLATE et sélectionner le fichier : Interface USB 1 TIC SF.xml</p>
+<p>-une fois le module trouvé, aller dans FILE &#8594; OPEN TEMPLATE et sélectionner le fichier : Interface USB 1 TIC SF.xml</p>
 </div>
 <div class="paragraph">
 <p>-cliquer sur le module détecté avec le bouton droit et sélectionner appliquer template</p>
@@ -812,7 +812,7 @@ ATTENTION ! Je vous conseille de lire le forum en premier afin d&#8217;être sû
 </div>
 </div>
 <div class="openblock panel">
-<div class="title">Un second équipement c&#8217;est créé lors de la mise à jour</div><div class="content">
+<div class="title">Un second équipement s&#8217;est créé lors de la mise à jour</div><div class="content">
 <div class="paragraph">
 <p>Un nouvel équipement peut apparaitre lorsque vous montez d&#8217;une version et que l&#8217;ancienne ne contenait pas l&#8217;ADCO du compteur.
 Pour récupérer l&#8217;ancien équipement :
@@ -831,7 +831,7 @@ Deux cas sont possible :
 - La donnée n&#8217;as pas encore eu le temps de remonter.</p>
 </div>
 <div class="paragraph">
-<p>Dans tous les cas il est nécessaire d&#8217;attendre 24h après l&#8217;installation du plugin pour être sûr des données qui sont reçu.</p>
+<p>Dans tous les cas il est nécessaire d&#8217;attendre 24h après l&#8217;installation du plugin pour être sûr des données qui sont reçues.</p>
 </div>
 </div>
 </div>
@@ -857,7 +857,7 @@ Supprimer :</p>
 </div>
 </div>
 <div class="paragraph">
-<p>et commenter la ligne suivante dans le fichier  <strong>/etc/inittab</strong></p>
+<p>et commenter la ligne suivante dans le fichier <strong>/etc/inittab</strong></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -865,7 +865,7 @@ Supprimer :</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Depuis la version jessie le fichier inittab n&#8217;est plus présent. Il faut utiliser ces lignes de commandes :</p>
+<p>Depuis la version jessie, le fichier inittab n&#8217;est plus présent. Il faut utiliser ces lignes de commandes :</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -878,10 +878,10 @@ sudo systemctl disable serial-getty@ttyAMA0.service</pre>
 <div class="openblock panel">
 <div class="title">Comment récupérer les statistiques du plugin</div><div class="content">
 <div class="paragraph">
-<p>Suivant l&#8217;architecture choisie les logs du plugin peuvent êtres séparés.</p>
+<p>Suivant l&#8217;architecture choisie, les logs du plugin peuvent êtres séparés.</p>
 </div>
 <div class="paragraph">
-<p>En mode local tous les logs se trouvent sur l&#8217;interface log de Jeedom (En mode expert : Général / Administration / Logs ; cf doc jeedom <a href="https://jeedom.fr/doc/documentation/core/fr_FR/doc-core-log.html">Accès doc</a>)</p>
+<p>En mode local, tous les logs se trouvent sur l&#8217;interface log de Jeedom (En mode expert : Général / Administration / Logs ; cf doc jeedom <a href="https://jeedom.fr/doc/documentation/core/fr_FR/doc-core-log.html">Accès doc</a>)</p>
 </div>
 <div class="paragraph">
 <p>En mode satellite :
@@ -893,15 +893,15 @@ sudo systemctl disable serial-getty@ttyAMA0.service</pre>
 <div class="openblock panel">
 <div class="title">Mon panel n&#8217;affiche pas les informations</div><div class="content">
 <div class="paragraph">
-<p>Dans un premier temps cliquer sur le bouton vérifier en haut à droite du panel afin de connaître l&#8217;état des données.
-Dans le cas ou une données est NOK aller sur l&#8217;objet téléinfo puis le re sauvegarder.</p>
+<p>Dans un premier temps, cliquer sur le bouton vérifier en haut à droite du panel afin de connaître l&#8217;état des données.
+Dans le cas où une données est NOK, aller sur l&#8217;objet téléinfo puis le resauvegarder.</p>
 </div>
 </div>
 </div>
 <div class="openblock panel">
 <div class="title">Mes statistiques ne se mettent pas à jour / sont erronés</div><div class="content">
 <div class="paragraph">
-<p>Afin que les statistiques soient calcullés il est nécessaire que les index soient historisés. Vérifier la bonne configuration de ceux-ci.
+<p>Afin que les statistiques soient calculées, il est nécessaire que les index soient historisés. Vérifier la bonne configuration de ceux-ci.
 Le lissage des historiques Jeedom peut induire des valeurs statistiques erronées. Pour supprimer le lissage pour chaque index :</p>
 </div>
 <div class="ulist">
