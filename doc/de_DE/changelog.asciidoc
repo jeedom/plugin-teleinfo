@@ -1,1 +1,1 @@
- Aktuelles Teleinfo Plugin auf dem Markt 
+Changelog détaillé : https://github.com/jeedom/plugin-teleinfo/commits/stable
