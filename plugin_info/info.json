@@ -9,5 +9,7 @@
 	"display" : "panel",
 	"hasDependency" : true,
 	"hasOwnDeamon" : true,
-	"maxDependancyInstallTime" : 45
+	"maxDependancyInstallTime" : 45,
+	"changelog" : "https://github.com/jeedom/plugin-teleinfo/blob/stable/doc/#language#/changelog.asciidoc",
+	"documentation" : "https://github.com/jeedom/plugin-teleinfo/blob/stable/doc/#language#/index.asciidoc"
 }
