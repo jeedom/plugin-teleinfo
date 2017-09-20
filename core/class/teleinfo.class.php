@@ -157,7 +157,7 @@ class teleinfo extends eqLogic {
 					throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
 				// on attend la fin d'une trame pour commencer a avec la trame suivante
 				while (fread($handle, 1) != chr(0x02)); 
-				while (feof($handle)) {
+				while (!feof($handle)) {
 					$char  = '';
 					$trame = ''; 
 					// on lit tous les caracteres jusqu'a la fin de la trame
