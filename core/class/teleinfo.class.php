@@ -155,6 +155,8 @@ class teleinfo extends eqLogic {
 				$handle = fopen($teleinfo->getPort(), "r");
 				if (!$handle)
 					throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
+				//stream_set_timeout($handle, 1); 
+				stream_set_blocking($handle, 0);
 				// on attend la fin d'une trame pour commencer a avec la trame suivante
 				while (fread($handle, 1) != chr(0x02)); 
 				while (!feof($handle)) {
