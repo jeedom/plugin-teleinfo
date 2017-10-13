@@ -167,7 +167,7 @@ class teleinfo extends eqLogic {
 		}*/
 		return $port;
 	}
-	public static function CalculateTodayStats(){
+	public static function CalculateTodayStats($stat){
 		$STAT_TODAY_HP = 0;
 		$STAT_TODAY_HC = 0;
 		$STAT_TENDANCE = 0;
@@ -262,36 +262,24 @@ class teleinfo extends eqLogic {
 		else if (($STAT_MAX_YESTERDAY - $STAT_TODAY) < 100){
 			$STAT_TENDANCE = 1;
 		}*/
-		foreach (eqLogic::byType('teleinfo') as $eqLogic){
-			foreach ($eqLogic->getCmd('info') as $cmd) {
-				if ($cmd->getConfiguration('type')== "stat") {
-					if($cmd->getConfiguration('info_conso') == "STAT_TODAY"){
-						log::add('teleinfo', 'info', 'Mise à jour de la statistique journalière ==> ' . intval($STAT_TODAY_HP + $STAT_TODAY_HC));
-						$cmd->setValue(intval($STAT_TODAY_HP + $STAT_TODAY_HC));
-						$cmd->event(intval($STAT_TODAY_HP + $STAT_TODAY_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "TENDANCE_DAY"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la tendance journalière ==> ' . '(Hier : '. intval($STAT_YESTERDAY_HC + $STAT_YESTERDAY_HP) . ' Aujourd\'hui : ' . intval($STAT_TODAY_HC + $STAT_TODAY_HP) . ' Différence : ' . (intval($STAT_YESTERDAY_HC + $STAT_YESTERDAY_HP) - intval($STAT_TODAY_HC + $STAT_TODAY_HP)) . ')');
-						$cmd->setValue(intval($STAT_YESTERDAY_HC + $STAT_YESTERDAY_HP) - intval($STAT_TODAY_HC + $STAT_TODAY_HP));
-						$cmd->event(intval($STAT_YESTERDAY_HC + $STAT_YESTERDAY_HP) - intval($STAT_TODAY_HC + $STAT_TODAY_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_TODAY_HP"){
-						log::add('teleinfo', 'info', 'Mise à jour de la statistique journalière (HP) ==> ' . intval($STAT_TODAY_HP));
-						$cmd->setValue(intval($STAT_TODAY_HP));
-						$cmd->event(intval($STAT_TODAY_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_TODAY_HC"){
-						log::add('teleinfo', 'info', 'Mise à jour de la statistique journalière (HC) ==> ' . intval($STAT_TODAY_HC));
-						$cmd->setValue(intval($STAT_TODAY_HC));
-						$cmd->event(intval($STAT_TODAY_HC));
-					}
-				}
-			}
+		switch($stat){
+			case "STAT_TODAY":
+				log::add('teleinfo', 'info', 'Mise à jour de la statistique journalière ==> ' . intval($STAT_TODAY_HP + $STAT_TODAY_HC));
+				return intval($STAT_TODAY_HP + $STAT_TODAY_HC);
+			case "TENDANCE_DAY":
+				log::add('teleinfo', 'debug', 'Mise à jour de la tendance journalière ==> ' . '(Hier : '. intval($STAT_YESTERDAY_HC + $STAT_YESTERDAY_HP) . ' Aujourd\'hui : ' . intval($STAT_TODAY_HC + $STAT_TODAY_HP) . ' Différence : ' . (intval($STAT_YESTERDAY_HC + $STAT_YESTERDAY_HP) - intval($STAT_TODAY_HC + $STAT_TODAY_HP)) . ')');
+				return intval($STAT_YESTERDAY_HC + $STAT_YESTERDAY_HP) - intval($STAT_TODAY_HC + $STAT_TODAY_HP);
+			case "STAT_TODAY_HP":
+				log::add('teleinfo', 'info', 'Mise à jour de la statistique journalière (HP) ==> ' . intval($STAT_TODAY_HP));
+				return intval($STAT_TODAY_HP);
+			case"STAT_TODAY_HC":
+				log::add('teleinfo', 'info', 'Mise à jour de la statistique journalière (HC) ==> ' . intval($STAT_TODAY_HC));
+				return intval($STAT_TODAY_HC);
 		}
 	
 	}
 	
-	public static function CalculateOtherStats(){
+	public static function CalculateOtherStats($stat){
 		$STAT_YESTERDAY = 0;
 		$STAT_YESTERDAY_HC = 0;
 		$STAT_YESTERDAY_HP = 0;
@@ -420,161 +408,97 @@ class teleinfo extends eqLogic {
 			$STAT_DEC_HP += intval($cmd->getStatistique($startdate_dec,$enddate_dec)['max']) - intval($cmd->getStatistique($startdate_dec,$enddate_dec)['min']);
 			//log::add('teleinfo', 'info', 'Conso HP --> ' . $STAT_TODAY_HP);
 		}
-		
-		foreach (eqLogic::byType('teleinfo') as $eqLogic){
-			foreach ($eqLogic->getCmd('info') as $cmd) {
-				if ($cmd->getConfiguration('type')== "stat" || $cmd->getConfiguration('type')== "panel") {
-					if($cmd->getConfiguration('info_conso') == "STAT_YESTERDAY"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier ==> ' . intval($STAT_YESTERDAY_HC) + intval($STAT_YESTERDAY_HP));
-						$cmd->setValue(intval($STAT_YESTERDAY_HC) + intval($STAT_YESTERDAY_HP));
-						$cmd->event(intval($STAT_YESTERDAY_HC) + intval($STAT_YESTERDAY_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_YESTERDAY_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier (HP) ==> ' . intval($STAT_YESTERDAY_HP));
-						$cmd->setValue(intval($STAT_YESTERDAY_HP));
-						$cmd->event(intval($STAT_YESTERDAY_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_YESTERDAY_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier (HC) ==> ' . intval($STAT_YESTERDAY_HC));
-						$cmd->setValue(intval($STAT_YESTERDAY_HC));
-						$cmd->event(intval($STAT_YESTERDAY_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_LASTMONTH"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique mois dernier ==> ' . intval($STAT_LASTMONTH));
-						$cmd->setValue(intval($STAT_LASTMONTH));
-						$cmd->event(intval($STAT_LASTMONTH));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_MONTH"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique mois en cours ==> ' . intval($STAT_MONTH));
-						$cmd->setValue(intval($STAT_MONTH));
-						$cmd->event(intval($STAT_MONTH));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_YEAR"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique anuelle ==> ' . intval($STAT_YEAR));
-						$cmd->setValue(intval($STAT_YEAR));
-						$cmd->event(intval($STAT_YEAR));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_JAN_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique janvier (HP) ==> ' . intval($STAT_JAN_HP));
-						$cmd->setValue(intval($STAT_JAN_HP));
-						$cmd->event(intval($STAT_JAN_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_JAN_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique janvier (HC) ==> ' . intval($STAT_JAN_HC));
-						$cmd->setValue(intval($STAT_JAN_HC));
-						$cmd->event(intval($STAT_JAN_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_FEV_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique février (HP) ==> ' . intval($STAT_FEV_HP));
-						$cmd->setValue(intval($STAT_FEV_HP));
-						$cmd->event(intval($STAT_FEV_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_FEV_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique février (HC) ==> ' . intval($STAT_FEV_HC));
-						$cmd->setValue(intval($STAT_FEV_HC));
-						$cmd->event(intval($STAT_FEV_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_MAR_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique mars (HP) ==> ' . intval($STAT_MAR_HP));
-						$cmd->setValue(intval($STAT_MAR_HP));
-						$cmd->event(intval($STAT_MAR_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_MAR_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique mars (HC) ==> ' . intval($STAT_MAR_HC));
-						$cmd->setValue(intval($STAT_MAR_HC));
-						$cmd->event(intval($STAT_MAR_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_AVR_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique avril (HP) ==> ' . intval($STAT_AVR_HP));
-						$cmd->setValue(intval($STAT_AVR_HP));
-						$cmd->event(intval($STAT_AVR_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_AVR_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique avril (HC) ==> ' . intval($STAT_AVR_HC));
-						$cmd->setValue(intval($STAT_AVR_HC));
-						$cmd->event(intval($STAT_AVR_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_MAI_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique mai (HP) ==> ' . intval($STAT_MAI_HP));
-						$cmd->setValue(intval($STAT_MAI_HP));
-						$cmd->event(intval($STAT_MAI_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_MAI_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique mai (HC) ==> ' . intval($STAT_MAI_HC));
-						$cmd->setValue(intval($STAT_MAI_HC));
-						$cmd->event(intval($STAT_MAI_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_JUIN_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique juin (HP) ==> ' . intval($STAT_JUIN_HP));
-						$cmd->setValue(intval($STAT_JUIN_HP));
-						$cmd->event(intval($STAT_JUIN_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_JUIN_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique juin (HC) ==> ' . intval($STAT_JUIN_HC));
-						$cmd->setValue(intval($STAT_JUIN_HC));
-						$cmd->event(intval($STAT_JUIN_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_JUI_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique juillet (HP) ==> ' . intval($STAT_JUI_HP));
-						$cmd->setValue(intval($STAT_JUI_HP));
-						$cmd->event(intval($STAT_JUI_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_JUI_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique juillet (HC) ==> ' . intval($STAT_JUI_HC));
-						$cmd->setValue(intval($STAT_JUI_HC));
-						$cmd->event(intval($STAT_JUI_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_AOU_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique août (HP) ==> ' . intval($STAT_AOU_HP));
-						$cmd->setValue(intval($STAT_AOU_HP));
-						$cmd->event(intval($STAT_AOU_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_AOU_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique août (HC) ==> ' . intval($STAT_AOU_HC));
-						$cmd->setValue(intval($STAT_AOU_HC));
-						$cmd->event(intval($STAT_AOU_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_SEP_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique septembre (HP) ==> ' . intval($STAT_SEP_HP));
-						$cmd->setValue(intval($STAT_SEP_HP));
-						$cmd->event(intval($STAT_SEP_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_SEP_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique septembre (HC) ==> ' . intval($STAT_SEP_HC));
-						$cmd->setValue(intval($STAT_SEP_HC));
-						$cmd->event(intval($STAT_SEP_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_OCT_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique octobre (HP) ==> ' . intval($STAT_OCT_HP));
-						$cmd->setValue(intval($STAT_OCT_HP));
-						$cmd->event(intval($STAT_OCT_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_OCT_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique octobre (HC) ==> ' . intval($STAT_OCT_HC));
-						$cmd->setValue(intval($STAT_OCT_HC));
-						$cmd->event(intval($STAT_OCT_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_NOV_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique novembre (HP) ==> ' . intval($STAT_NOV_HP));
-						$cmd->setValue(intval($STAT_NOV_HP));
-						$cmd->event(intval($STAT_NOV_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_NOV_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique novembre (HC) ==> ' . intval($STAT_NOV_HC));
-						$cmd->setValue(intval($STAT_NOV_HC));
-						$cmd->event(intval($STAT_NOV_HC));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_DEC_HP"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique décembre (HP) ==> ' . intval($STAT_DEC_HP));
-						$cmd->setValue(intval($STAT_DEC_HP));
-						$cmd->event(intval($STAT_DEC_HP));
-					}
-					else if($cmd->getConfiguration('info_conso') == "STAT_DEC_HC"){
-						log::add('teleinfo', 'debug', 'Mise à jour de la statistique décembre (HC) ==> ' . intval($STAT_DEC_HC));
-						$cmd->setValue(intval($STAT_DEC_HC));
-						$cmd->event(intval($STAT_DEC_HC));
-					}
-				}
+		switch($stat){
+			case "STAT_YESTERDAY":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier ==> ' . intval($STAT_YESTERDAY_HC) + intval($STAT_YESTERDAY_HP));
+				return intval($STAT_YESTERDAY_HC) + intval($STAT_YESTERDAY_HP);
+			case "STAT_YESTERDAY_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier (HP) ==> ' . intval($STAT_YESTERDAY_HP));
+				return intval($STAT_YESTERDAY_HP));
+			case "STAT_YESTERDAY_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier (HC) ==> ' . intval($STAT_YESTERDAY_HC));
+				return intval($STAT_YESTERDAY_HC);
+			case "STAT_LASTMONTH":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique mois dernier ==> ' . intval($STAT_LASTMONTH));
+				return intval($STAT_LASTMONTH);
+			case "STAT_MONTH":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique mois en cours ==> ' . intval($STAT_MONTH));
+				return intval($STAT_MONTH);
+			case "STAT_YEAR":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique anuelle ==> ' . intval($STAT_YEAR));
+				return intval($STAT_YEAR);
+			case "STAT_JAN_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique janvier (HP) ==> ' . intval($STAT_JAN_HP));
+				return intval($STAT_JAN_HP);
+			case "STAT_JAN_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique janvier (HC) ==> ' . intval($STAT_JAN_HC));
+				return intval($STAT_JAN_HC);
+			case "STAT_FEV_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique février (HP) ==> ' . intval($STAT_FEV_HP));
+				return intval($STAT_FEV_HP);
+			case "STAT_FEV_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique février (HC) ==> ' . intval($STAT_FEV_HC));
+				return intval($STAT_FEV_HC);
+			case "STAT_MAR_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique mars (HP) ==> ' . intval($STAT_MAR_HP));
+				return intval($STAT_MAR_HP);
+			case "STAT_MAR_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique mars (HC) ==> ' . intval($STAT_MAR_HC));
+				return intval($STAT_MAR_HC);
+			case  "STAT_AVR_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique avril (HP) ==> ' . intval($STAT_AVR_HP));
+				return intval($STAT_AVR_HP);
+			case "STAT_AVR_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique avril (HC) ==> ' . intval($STAT_AVR_HC));
+				return intval($STAT_AVR_HC);
+			case "STAT_MAI_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique mai (HP) ==> ' . intval($STAT_MAI_HP));
+				return intval($STAT_MAI_HP);
+			case "STAT_MAI_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique mai (HC) ==> ' . intval($STAT_MAI_HC));
+				return intval($STAT_MAI_HC);
+			case  "STAT_JUIN_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique juin (HP) ==> ' . intval($STAT_JUIN_HP));
+				return intval($STAT_JUIN_HP);
+			case  "STAT_JUIN_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique juin (HC) ==> ' . intval($STAT_JUIN_HC));
+				return intval($STAT_JUIN_HC);
+			case "STAT_JUI_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique juillet (HP) ==> ' . intval($STAT_JUI_HP));
+				return intval($STAT_JUI_HP);
+			case "STAT_JUI_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique juillet (HC) ==> ' . intval($STAT_JUI_HC));
+				return intval($STAT_JUI_HC);
+			case "STAT_AOU_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique août (HP) ==> ' . intval($STAT_AOU_HP));
+				return intval($STAT_AOU_HP);
+			case  "STAT_AOU_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique août (HC) ==> ' . intval($STAT_AOU_HC));
+				return intval($STAT_AOU_HC);
+			case "STAT_SEP_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique septembre (HP) ==> ' . intval($STAT_SEP_HP));
+				return intval($STAT_SEP_HP);
+			case "STAT_SEP_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique septembre (HC) ==> ' . intval($STAT_SEP_HC));
+				return intval($STAT_SEP_HC);
+			case "STAT_OCT_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique octobre (HP) ==> ' . intval($STAT_OCT_HP));
+				return intval($STAT_OCT_HP);
+			case "STAT_OCT_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique octobre (HC) ==> ' . intval($STAT_OCT_HC));
+				return intval($STAT_OCT_HC);
+			case "STAT_NOV_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique novembre (HP) ==> ' . intval($STAT_NOV_HP));
+				return intval($STAT_NOV_HP);
+			case "STAT_NOV_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique novembre (HC) ==> ' . intval($STAT_NOV_HC));
+				return intval($STAT_NOV_HC);
+			case "STAT_DEC_HP":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique décembre (HP) ==> ' . intval($STAT_DEC_HP));
+				return intval($STAT_DEC_HP);
+			case "STAT_DEC_HC":
+				log::add('teleinfo', 'debug', 'Mise à jour de la statistique décembre (HC) ==> ' . intval($STAT_DEC_HC));
+				return intval($STAT_DEC_HC);
 			}
 		}
 	
