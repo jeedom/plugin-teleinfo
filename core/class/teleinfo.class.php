@@ -134,7 +134,7 @@ class teleinfo extends eqLogic {
 				switch($param){
 					case 'ADCO':
 						$this->setLogicalId($value);
-					return;
+					continue;
 					case 'PTEC':
 						$value=substr($value,0,2);
 					break;
