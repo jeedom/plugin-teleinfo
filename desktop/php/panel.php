@@ -37,7 +37,7 @@ $eqLogics = eqLogic::byType('teleinfo');
 							<img src="plugins/teleinfo/ressources/panel/Battery_1_5_low.png" height="100px" width="100px" />
 							<span class='label label-success' style="font-size: 1.3em;">
 								<span class="teleinfoAttr" data-l1key="conso" data-l2key="day"></span>
-								kWh
+								<?php echo teleinfo::CalculateTodayStats("STAT_TODAY");?>kWh
 							</span>
 						</div>
 						<div class="text-center">
@@ -49,7 +49,7 @@ $eqLogics = eqLogic::byType('teleinfo');
 							<img src="plugins/teleinfo/ressources/panel/Battery_3_5_low.png" height="100px" width="100px" />
 							<span class='label label-success' style="font-size: 1.3em;">
 								<span class="teleinfoAttr" data-l1key="conso" data-l2key="month"></span>
-								kWh
+								<?php echo teleinfo::CalculateOtherStats("STAT_MONTH");?>kWh
 							</span>
 						</div>
 						<div class="text-center">
@@ -61,7 +61,7 @@ $eqLogics = eqLogic::byType('teleinfo');
 							<img src="plugins/teleinfo/ressources/panel/Battery_full_low.png" height="100px" width="100px" />
 							<span class='label label-success' style="font-size: 1.3em;">
 								<span class="teleinfoAttr" data-l1key="conso" data-l2key="year"></span>
-								kWh
+								<?php echo teleinfo::CalculateOtherStats("STAT_YEAR");?>kWh
 							</span>
 						</div>
 						<div class="text-center">
