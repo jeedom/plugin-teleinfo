@@ -17,6 +17,22 @@
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class teleinfo extends eqLogic {
+	public function AddCommande($Name,$_logicalId,$Type="info", $SubType='binary') {
+		$Commande = $this->getCmd(null,$_logicalId);
+		if (!is_object($Commande))
+		{
+			$Commande = new VoletsCmd();
+			$Commande->setId(null);
+			$Commande->setName($Name);
+			$Commande->setIsVisible(true);
+			$Commande->setLogicalId($_logicalId);
+			$Commande->setEqLogic_id($this->getId());
+			$Commande->setType($Type);
+			$Commande->setSubType($SubType);
+			$Commande->save();
+		}
+		return $Commande;
+	}
 	public static function getTeleinfoInfo($_url){
 		return 1;
 	}
@@ -27,78 +43,6 @@ class teleinfo extends eqLogic {
 	public static function cronHourly() {
 		self::Moy_Last_Hour();
 	}
-	public static function createFromDef($_def) {
-		if (!isset($_def['ADCO'])) {
-			log::add('teleinfo', 'info', 'Information manquante pour ajouter l\'équipement : ' . print_r($_def, true));
-			return false;
-		}
-		$teleinfo = teleinfo::byLogicalId($_def['ADCO'], 'teleinfo');
-		if (!is_object($teleinfo)) {
-			$eqLogic = new teleinfo();
-			$eqLogic->setName($_def['ADCO']);
-		}
-		$eqLogic->setLogicalId($_def['ADCO']);
-		$eqLogic->setEqType_name('teleinfo');
-		$eqLogic->setIsEnable(1);
-		$eqLogic->setIsVisible(1);
-		$eqLogic->save();
-		//$eqLogic->applyModuleConfiguration();
-		return $eqLogic;
-	}
-	public static function createCmdFromDef($_oADCO, $_oKey, $_oValue) {
-		if (!isset($_oKey)) {
-			log::add('teleinfo', 'error', 'Information manquante pour ajouter l\'équipement : ' . print_r($_oKey, true));
-			return false;
-		}
-		if (!isset($_oADCO)) {
-			log::add('teleinfo', 'error', 'Information manquante pour ajouter l\'équipement : ' . print_r($_oADCO, true));
-			return false;
-		}
-		$teleinfo = teleinfo::byLogicalId($_oADCO, 'teleinfo');
-		if (!is_object($teleinfo)) {
-			//$eqLogic = new teleinfo();
-			//$eqLogic->setName($_def['ADCO']);
-		}
-		if($teleinfo->getConfiguration('AutoCreateFromCompteur') == '1'){
-			log::add('teleinfo', 'info', 'Création de la commande ' . $_oKey . ' sur l\'ADCO ' . $_oADCO);
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName($_oKey);
-			//$cmd->setEqLogic_id($_oADCO);
-			$cmd->setEqLogic_id($teleinfo->id);
-			log::add('teleinfo', 'debug', 'EqLogicID');
-			$cmd->setLogicalId($_oKey);
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', $_oKey);
-			switch ($_oKey) {
-				case "PAPP":
-					$cmd->setDisplay('generic_type','GENERIC_INFO');
-					$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
-					$cmd->setSubType('string');
-					break;
-				case "OPTARIF":
-				case "HHPHC":
-				case "PPOT":
-				case "PEJP":
-				case "DEMAIN":
-					$cmd->setSubType('string');
-					$cmd->setDisplay('generic_type','GENERIC_INFO');
-					break;
-				default:
-					$cmd->setSubType('numeric');
-					$cmd->setDisplay('generic_type','GENERIC_INFO');
-				break;	
-			}		
-			$cmd->setIsHistorized(1);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd->setValue($_oValue);
-			$cmd->event($_oValue);
-			return $cmd;
-		}
-	}
-	
 	public static function deamon_info() {
 		$return = array();
 		$return['log'] = 'teleinfo';	
@@ -190,11 +134,12 @@ class teleinfo extends eqLogic {
 				switch($param){
 					case 'ADCO':
 						$this->setLogicalId($value);
-					break;
+					return;
 					case 'PTEC':
 						$value=substr($value,0,2);
 					break;
 				}
+				$this->AddCommande($param,$param,$Type="info", $SubType='numeric') ;
 				$this->checkAndUpdateCmd($param,$value);
            			log::add('teleinfo','debug',$this->getHumanName() . ': '. $param . ' = '.$value);
 			}
@@ -756,309 +701,7 @@ class teleinfo extends eqLogic {
 		}
 	}
 	
-	public function preSave() {
-		$this->setCategory('energy',  1);
-		$cmd = null;
-		$cmd = $this->getCmd('info','HEALTH');
-		if (is_object($cmd)) {
-            $cmd->remove();
-			$cmd->save();
-        }
-	}
-	
-	public function postSave() {
-		log::add('teleinfo', 'debug', '-------- Sauvegarde de l\'objet --------');
-		//$template_name = "";
-		/*if($this->getConfiguration('template') == 'bleu'){
-                    $template_name = "teleinfo_bleu_";		
-		}
-        else if($this->getConfiguration('template') == 'base'){
-            $template_name = "teleinfo_base_";
-        }
-        else if($this->getConfiguration('template') == ''){
-            goto after_template;
-        }
-		log::add('teleinfo', 'info', '==> Gestion des templates');
-              */  
-		foreach ($this->getCmd(null, null, true) as $cmd) {
-			 //$replace['#'.$cmd->getLogicalId().'#'] = $cmd->toHtml($_version);
-			 switch ($cmd->getConfiguration('info_conso')) {
-					case "BASE":
-					case "HCHP":
-					case "EJPHN":
-					case "BBRHPJB":
-					case "BBRHPJW":
-					case "BBRHPJR":
-					case "HCHC":
-					case "BBRHCJB":
-					case "BBRHCJW":
-					case "BBRHCJR":
-						log::add('teleinfo', 'debug', '=> index');
-						if($cmd->getDisplay('generic_type') == ''){
-							$cmd->setDisplay('generic_type','GENERIC_INFO');
-						}
-						//$cmd->setTemplate('dashboard',  $template_name . 'teleinfo_new_index');
-						//$cmd->setTemplate('mobile',  $template_name . 'teleinfo_new_index');
-						$cmd->save();
-						$cmd->refresh();
-						break;
-					case "PAPP":
-						log::add('teleinfo', 'debug', '=> papp');
-						if($cmd->getDisplay('generic_type') == ''){
-							$cmd->setDisplay('generic_type','GENERIC_INFO');
-							$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
-						}
-						//$cmd->setTemplate('dashboard',  $template_name . 'teleinfo_conso_inst');
-						//$cmd->setTemplate('mobile',  $template_name . 'teleinfo_conso_inst');
-						$cmd->save();
-						$cmd->refresh();
-					break;	
-					case "PTEC":
-						log::add('teleinfo', 'debug', '=> ptec');
-						if($cmd->getDisplay('generic_type') == ''){
-							$cmd->setDisplay('generic_type','GENERIC_INFO');
-						}
-						//$cmd->setTemplate('dashboard',  $template_name . 'teleinfo_ptec');
-						//$cmd->setTemplate('mobile',  $template_name . 'teleinfo_ptec');
-						$cmd->save();
-						$cmd->refresh();
-						break;
-					default :
-						log::add('teleinfo', 'debug', '=> ptec');
-						if($cmd->getDisplay('generic_type') == ''){
-							$cmd->setDisplay('generic_type','GENERIC_INFO');
-						}
-						break;
-				}
-		}
-		after_template:
-		log::add('teleinfo', 'info', '==> Gestion des id des commandes');
-		foreach ($this->getCmd('info') as $cmd) {
-		//foreach ($this->getCmd(null, null, true) as $cmd) {
-			log::add('teleinfo', 'debug', 'Commande : ' . $cmd->getConfiguration('info_conso'));
-			$cmd->setLogicalId($cmd->getConfiguration('info_conso'));
-			$cmd->save();
-		}
-		log::add('teleinfo', 'debug', '-------- Fin de la sauvegarde --------');
-		if($this->getConfiguration('AutoGenerateFields') == '1'){
-			$this->CreateFromAbo($this->getConfiguration('abonnement'));
-		}
-		
-		$this->CreateOtherCmd();
-	
-		$this->CreatePanelStats();
-		
-		/*foreach ($this->getCmd(null, null, true) as $cmd) {
-			$cmd->setLogicalId($cmd->getConfiguration('info_conso'));
-			$cmd->save();
-		}*/
-	}
-	
-	public function preRemove() {
-		log::add('teleinfo', 'debug', 'Suppression d\'un objet');
-	}
-	
-	public function CreateOtherCmd(){
-		$array = array("HEALTH");
-		for($ii = 0; $ii < 1; $ii++){
-			$cmd = $this->getCmd('info',$array[$ii]);
-			if ($cmd == null) {
-				$cmd = null;
-				$cmd = new teleinfoCmd();
-				$cmd->setName($array[$ii]);
-				$cmd->setEqLogic_id($this->id);
-				$cmd->setLogicalId($array[$ii]);
-				$cmd->setType('info');
-				$cmd->setConfiguration('info_conso', $array[$ii]);
-				$cmd->setConfiguration('type', 'health');
-				$cmd->setSubType('numeric');
-				$cmd->setUnite('Wh');
-				$cmd->setIsHistorized(0);
-				$cmd->setEventOnly(1);
-				$cmd->setIsVisible(0);
-				$cmd->save();
-			}
-		}
-	}
-	
-	public function CreatePanelStats(){
-		$array = array("STAT_JAN_HP","STAT_JAN_HC", "STAT_FEV_HP","STAT_FEV_HC", "STAT_MAR_HP","STAT_MAR_HC", "STAT_AVR_HP","STAT_AVR_HC", "STAT_MAI_HP","STAT_MAI_HC", "STAT_JUIN_HP","STAT_JUIN_HC", "STAT_JUI_HP","STAT_JUI_HC", "STAT_AOU_HP","STAT_AOU_HC", "STAT_SEP_HP","STAT_SEP_HC", "STAT_OCT_HP","STAT_OCT_HC", "STAT_NOV_HP","STAT_NOV_HC", "STAT_DEC_HP","STAT_DEC_HC");
-		for($ii = 0; $ii < 24; $ii++){
-			$cmd = $this->getCmd('info',$array[$ii]);
-			if ($cmd == null) {
-				$cmd = null;
-				$cmd = new teleinfoCmd();
-				$cmd->setName($array[$ii]);
-				$cmd->setEqLogic_id($this->id);
-				$cmd->setLogicalId($array[$ii]);
-				$cmd->setType('info');
-				$cmd->setConfiguration('info_conso', $array[$ii]);
-				$cmd->setConfiguration('type', 'panel');
-				$cmd->setDisplay('generic_type','DONT');
-				$cmd->setSubType('numeric');
-				$cmd->setUnite('Wh');
-				$cmd->setIsHistorized(0);
-				$cmd->setEventOnly(1);
-				$cmd->setIsVisible(0);
-				$cmd->save();
-			}
-			else{
-				$cmd->setDisplay('generic_type','DONT');
-				$cmd->save();
-			}
-		}
-	}
-	
-	public function CreateFromAbo($_abo){
-		$this->setConfiguration('AutoGenerateFields','0');
-		$this->save();
-		if($_abo == 'base'){
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Index');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('BASE');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'BASE');
-			$cmd->setDisplay('generic_type','GENERIC_INFO');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('Wh');
-			$cmd->setIsHistorized(1);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Intensité Instantanée');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('IINST');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'IINST');
-			$cmd->setDisplay('generic_type','DONT');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('A');
-			$cmd->setIsHistorized(0);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Puissance apparente');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('PAPP');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'PAPP');
-			$cmd->setDisplay('generic_type','GENERIC_INFO');
-			$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('VA (~W)');
-			$cmd->setIsHistorized(1);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Dépassement');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('ADPS');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'ADPS');
-			$cmd->setDisplay('generic_type','DONT');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('A');
-			$cmd->setIsHistorized(0);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-		}
-		else if($_abo == 'bleu'){
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Index HP');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('HCHP');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'HCHP');
-			$cmd->setDisplay('generic_type','GENERIC_INFO');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('Wh');
-			$cmd->setIsHistorized(1);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Index HC');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('HCHC');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'HCHC');
-			$cmd->setDisplay('generic_type','GENERIC_INFO');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('Wh');
-			$cmd->setIsHistorized(1);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Puissance Apparente');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('PAPP');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'PAPP');
-			$cmd->setDisplay('generic_type','GENERIC_INFO');
-			$cmd->setDisplay('icon','<i class=\"fa fa-tachometer\"><\/i>');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('VA (~W)');
-			$cmd->setIsHistorized(1);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Intensité');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('IINST');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'IINST');
-			$cmd->setDisplay('generic_type','DONT');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('A');
-			$cmd->setIsHistorized(0);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Dépassement');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('ADPS');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'ADPS');
-			$cmd->setDisplay('generic_type','DONT');
-			$cmd->setSubType('numeric');
-			$cmd->setUnite('A');
-			$cmd->setIsHistorized(0);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-			$cmd = null;
-			$cmd = new teleinfoCmd();
-			$cmd->setName('Plage Horaire');
-			$cmd->setEqLogic_id($this->id);
-			$cmd->setLogicalId('HHPHC');
-			$cmd->setType('info');
-			$cmd->setConfiguration('info_conso', 'HHPHC');
-			$cmd->setDisplay('generic_type','DONT');
-			$cmd->setSubType('string');
-			//$cmd->setUnite('');
-			$cmd->setIsHistorized(0);
-			$cmd->setEventOnly(1);
-			$cmd->setIsVisible(1);
-			$cmd->save();
-		}
-	}
+
 }
 class teleinfoCmd extends cmd {
     public function execute($_options = null) {
