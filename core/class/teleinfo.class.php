@@ -278,7 +278,6 @@ class teleinfo extends eqLogic {
 		}
 	
 	}
-	
 	public static function CalculateOtherStats($stat){
 		$STAT_YESTERDAY = 0;
 		$STAT_YESTERDAY_HC = 0;
@@ -414,7 +413,7 @@ class teleinfo extends eqLogic {
 				return intval($STAT_YESTERDAY_HC) + intval($STAT_YESTERDAY_HP);
 			case "STAT_YESTERDAY_HP":
 				log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier (HP) ==> ' . intval($STAT_YESTERDAY_HP));
-				return intval($STAT_YESTERDAY_HP));
+				return intval($STAT_YESTERDAY_HP);
 			case "STAT_YESTERDAY_HC":
 				log::add('teleinfo', 'debug', 'Mise à jour de la statistique hier (HC) ==> ' . intval($STAT_YESTERDAY_HC));
 				return intval($STAT_YESTERDAY_HC);
@@ -501,7 +500,6 @@ class teleinfo extends eqLogic {
 				return intval($STAT_DEC_HC);
 		}
 	}
-	
 	public static function Moy_Last_Hour(){
 		$ppap_hp = 0;
 		$ppap_hc = 0;
@@ -559,7 +557,6 @@ class teleinfo extends eqLogic {
 			}
 		}
 	}
-	
 	public static function Calculate_PAPP(){
 		$ppap_hp = 0;
 		$ppap_hc = 0;
@@ -622,8 +619,6 @@ class teleinfo extends eqLogic {
 			}
 		}
 	}
-	
-
 }
 class teleinfoCmd extends cmd {
     public function execute($_options = null) {
