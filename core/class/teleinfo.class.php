@@ -499,9 +499,7 @@ class teleinfo extends eqLogic {
 			case "STAT_DEC_HC":
 				log::add('teleinfo', 'debug', 'Mise à jour de la statistique décembre (HC) ==> ' . intval($STAT_DEC_HC));
 				return intval($STAT_DEC_HC);
-			}
 		}
-	
 	}
 	
 	public static function Moy_Last_Hour(){
