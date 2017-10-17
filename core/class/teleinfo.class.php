@@ -16,6 +16,8 @@
  */
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+include_file('core', 'PhpSerial', 'class', 'teleinfo');
+
 class teleinfo extends eqLogic {
 	public function AddCommande($Name,$_logicalId,$Type="info", $SubType='binary') {
 		$Commande = $this->getCmd(null,$_logicalId);
@@ -91,36 +93,56 @@ class teleinfo extends eqLogic {
 	public static function pull($_options) {
 		$teleinfo = eqLogic::byId($_options['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
-			try {
-				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
-				$cmd="stty -F " . $teleinfo->getPort() . " speed 1200 cs7 evenp cstopb";
-				$cmd .= ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &';
-				exec($cmd);
-				$handle = fopen($teleinfo->getPort(), "r");
-				if (!$handle)
-					throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
-				//stream_set_timeout($handle, 1); 
-				stream_set_blocking($handle, 0);
-				// on attend la fin d'une trame pour commencer a avec la trame suivante
-				while (fread($handle, 1) != chr(0x02)); 
-				while (!feof($handle)) {
-					$char  = '';
-					$trame = ''; 
-					// on lit tous les caracteres jusqu'a la fin de la trame
-					while ($char != chr(0x02)) {
-						$char = fread($handle, 1);
-						if ($char != chr(0x02)){
-							$trame .= $char;
-						}
+			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
+			/*$cmd="stty -F " . $teleinfo->getPort() . " speed 1200 cs7 evenp cstopb";
+			$cmd .= ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &';
+			exec($cmd);
+			$handle = fopen($teleinfo->getPort(), "r");
+			if (!$handle)
+				throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
+			//stream_set_timeout($handle, 1); 
+			stream_set_blocking($handle, 0);
+			// on attend la fin d'une trame pour commencer a avec la trame suivante
+			while (fread($handle, 1) != chr(0x02)); 
+			while (!feof($handle)) {
+				$char  = '';
+				$trame = ''; 
+				// on lit tous les caracteres jusqu'a la fin de la trame
+				while ($char != chr(0x02)) {
+					$char = fread($handle, 1);
+					if ($char != chr(0x02)){
+						$trame .= $char;
 					}
-					$trame=trim($trame);
-					log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
-					$teleinfo->UpdateInfo($trame);
 				}
-				fclose ($handle);	  
-			} catch ( Exception $e ) {
-			      // send error message if you can
-			 } 
+				$trame=trim($trame);
+				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
+				$teleinfo->UpdateInfo($trame);
+			}
+			fclose ($handle);*/
+			$serial = new PhpSerial;
+
+			// First we must specify the device. This works on both linux and windows (if
+			// your linux serial device is /dev/ttyS0 for COM1, etc)
+			$serial->deviceSet($teleinfo->getPort());
+
+			// We can change the baud rate, parity, length, stop bits, flow control
+			$serial->confBaudRate(1200);
+			$serial->confParity("none");
+			$serial->confCharacterLength(7);
+			$serial->confStopBits(1);
+			$serial->confFlowControl("none");
+
+			// Then we need to open it
+			$serial->deviceOpen();
+
+			while (true) {
+				$trame = ''; 
+				$trame=trim($serial->readPort());
+				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
+				$teleinfo->UpdateInfo($trame);
+			}
+			//$serial->sendMessage("Hello !");
+			$serial->deviceClose();
 		}
 	}
 	public function UpdateInfo($trame) {
