@@ -679,6 +679,8 @@ class PhpSerial
 
     public function _exec($cmd, &$out = null)
     {
+		$cmd .= ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &';
+		exec($cmd);
         $desc = array(
             1 => array("pipe", "w"),
             2 => array("pipe", "w")
