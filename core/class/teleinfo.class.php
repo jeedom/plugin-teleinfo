@@ -94,13 +94,13 @@ class teleinfo extends eqLogic {
 		$teleinfo = eqLogic::byId($_options['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
 			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
-			/*$cmd="stty -F " . $teleinfo->getPort() . " speed 1200 cs7 evenp cstopb";
+			$cmd="stty -F " . $teleinfo->getPort() . " speed 1200 cs7 evenp cstopb";
 			$cmd .= ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &';
 			exec($cmd);
 			$handle = fopen($teleinfo->getPort(), "r");
+			$handle = stream_socket_client($teleinfo->getPort(), $errno, $errstr, 30);
 			if (!$handle)
 				throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
-			//stream_set_timeout($handle, 1); 
 			stream_set_blocking($handle, 0);
 			// on attend la fin d'une trame pour commencer a avec la trame suivante
 			while (fread($handle, 1) != chr(0x02)); 
@@ -118,8 +118,8 @@ class teleinfo extends eqLogic {
 				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
 				$teleinfo->UpdateInfo($trame);
 			}
-			fclose ($handle);*/
-			$serial = new PhpSerial;
+			fclose ($handle);
+			/*$serial = new PhpSerial;
 
 			// First we must specify the device. This works on both linux and windows (if
 			// your linux serial device is /dev/ttyS0 for COM1, etc)
@@ -142,7 +142,7 @@ class teleinfo extends eqLogic {
 				$teleinfo->UpdateInfo($trame);
 			}
 			//$serial->sendMessage("Hello !");
-			$serial->deviceClose();
+			$serial->deviceClose();*/
 		}
 	}
 	public function UpdateInfo($trame) {
