@@ -126,9 +126,9 @@ class teleinfo extends eqLogic {
 
 			// We can change the baud rate, parity, length, stop bits, flow control
 			$serial->confBaudRate(1200);
-			$serial->confParity("even");
+			$serial->confParity("odd");
 			$serial->confCharacterLength(7);
-			$serial->confStopBits(1);
+			$serial->confStopBits(0);
 			$serial->confFlowControl("none");
 
 			// Then we need to open it
