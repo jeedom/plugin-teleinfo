@@ -47,7 +47,7 @@ class PhpSerial
         if (substr($sysName, 0, 5) === "Linux") {
             $this->_os = "linux";
 
-            if ($this->_exec("stty") === 0) {
+            if ($this->_exec("sudo stty") === 0) {
                 register_shutdown_function(array($this, "deviceClose"));
             } else {
                 trigger_error(
@@ -90,14 +90,14 @@ class PhpSerial
                     $device = "/dev/ttyS" . ($matches[1] - 1);
                 }
 
-                if ($this->_exec("stty -F " . $device) === 0) {
+                if ($this->_exec("sudo stty -F " . $device) === 0) {
                     $this->_device = $device;
                     $this->_dState = SERIAL_DEVICE_SET;
 
                     return true;
                 }
             } elseif ($this->_os === "osx") {
-                if ($this->_exec("stty -f " . $device) === 0) {
+                if ($this->_exec("sudo stty -f " . $device) === 0) {
                     $this->_device = $device;
                     $this->_dState = SERIAL_DEVICE_SET;
 
@@ -241,17 +241,17 @@ class PhpSerial
         if (isset($validBauds[$rate])) {
             if ($this->_os === "linux") {
                 $ret = $this->_exec(
-                    "stty -F " . $this->_device . " " . (int) $rate,
+                    "sudo stty -F " . $this->_device . " " . (int) $rate,
                     $out
                 );
             } elseif ($this->_os === "osx") {
                 $ret = $this->_exec(
-                    "stty -f " . $this->_device . " " . (int) $rate,
+                    "sudo stty -f " . $this->_device . " " . (int) $rate,
                     $out
                 );
             } elseif ($this->_os === "windows") {
                 $ret = $this->_exec(
-                    "mode " . $this->_winDevice . " BAUD=" . $validBauds[$rate],
+                    "sudo mode " . $this->_winDevice . " BAUD=" . $validBauds[$rate],
                     $out
                 );
             } else {
@@ -305,17 +305,17 @@ class PhpSerial
 
         if ($this->_os === "linux") {
             $ret = $this->_exec(
-                "stty -F " . $this->_device . " " . $args[$parity],
+                "sudo stty -F " . $this->_device . " " . $args[$parity],
                 $out
             );
         } elseif ($this->_os === "osx") {
             $ret = $this->_exec(
-                "stty -f " . $this->_device . " " . $args[$parity],
+                "sudo stty -f " . $this->_device . " " . $args[$parity],
                 $out
             );
         } else {
             $ret = $this->_exec(
-                "mode " . $this->_winDevice . " PARITY=" . $parity{0},
+                "sudo mode " . $this->_winDevice . " PARITY=" . $parity{0},
                 $out
             );
         }
@@ -353,17 +353,17 @@ class PhpSerial
 
         if ($this->_os === "linux") {
             $ret = $this->_exec(
-                "stty -F " . $this->_device . " cs" . $int,
+                "sudo stty -F " . $this->_device . " cs" . $int,
                 $out
             );
         } elseif ($this->_os === "osx") {
             $ret = $this->_exec(
-                "stty -f " . $this->_device . " cs" . $int,
+                "sudo stty -f " . $this->_device . " cs" . $int,
                 $out
             );
         } else {
             $ret = $this->_exec(
-                "mode " . $this->_winDevice . " DATA=" . $int,
+                "sudo mode " . $this->_winDevice . " DATA=" . $int,
                 $out
             );
         }
@@ -412,19 +412,19 @@ class PhpSerial
 
         if ($this->_os === "linux") {
             $ret = $this->_exec(
-                "stty -F " . $this->_device . " " .
+                "sudo stty -F " . $this->_device . " " .
                     (($length == 1) ? "-" : "") . "cstopb",
                 $out
             );
         } elseif ($this->_os === "osx") {
             $ret = $this->_exec(
-                "stty -f " . $this->_device . " " .
+                "sudo stty -f " . $this->_device . " " .
                     (($length == 1) ? "-" : "") . "cstopb",
                 $out
             );
         } else {
             $ret = $this->_exec(
-                "mode " . $this->_winDevice . " STOP=" . $length,
+                "sudo mode " . $this->_winDevice . " STOP=" . $length,
                 $out
             );
         }
@@ -478,17 +478,17 @@ class PhpSerial
 
         if ($this->_os === "linux") {
             $ret = $this->_exec(
-                "stty -F " . $this->_device . " " . $linuxModes[$mode],
+                "sudo stty -F " . $this->_device . " " . $linuxModes[$mode],
                 $out
             );
         } elseif ($this->_os === "osx") {
             $ret = $this->_exec(
-                "stty -f " . $this->_device . " " . $linuxModes[$mode],
+                "sudo stty -f " . $this->_device . " " . $linuxModes[$mode],
                 $out
             );
         } else {
             $ret = $this->_exec(
-                "mode " . $this->_winDevice . " " . $windowsModes[$mode],
+                "sudo mode " . $this->_winDevice . " " . $windowsModes[$mode],
                 $out
             );
         }
@@ -522,7 +522,7 @@ class PhpSerial
         }
 
         $return = exec(
-            "setserial " . $this->_device . " " . $param . " " . $arg . " 2>&1"
+            "sudo setserial " . $this->_device . " " . $param . " " . $arg . " 2>&1"
         );
 
         if ($return{0} === "I") {
