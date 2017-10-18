@@ -94,11 +94,10 @@ class teleinfo extends eqLogic {
 		$teleinfo = eqLogic::byId($_options['id']);
 		if (is_object($teleinfo) && $teleinfo->getIsEnable()) {
 			log::add('teleinfo','debug',$teleinfo->getHumanName() . ': Lancement du démon de lecture des trames Téléinfo');
-			$cmd="stty -F " . $teleinfo->getPort() . " speed 1200 cs7 evenp cstopb";
+			/*$cmd="stty -F " . $teleinfo->getPort() . " speed 1200 cs7 evenp cstopb";
 			$cmd .= ' >> ' . log::getPathToLog('teleinfo') . ' 2>&1 &';
 			exec($cmd);
 			$handle = fopen($teleinfo->getPort(), "r");
-			$handle = stream_socket_client($teleinfo->getPort(), $errno, $errstr, 30);
 			if (!$handle)
 				throw new Exception(__($teleinfo->getPort()." non trouvé", __FILE__));
 			stream_set_blocking($handle, 0);
@@ -118,8 +117,8 @@ class teleinfo extends eqLogic {
 				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
 				$teleinfo->UpdateInfo($trame);
 			}
-			fclose ($handle);
-			/*$serial = new PhpSerial;
+			fclose ($handle);*/
+			$serial = new PhpSerial;
 
 			// First we must specify the device. This works on both linux and windows (if
 			// your linux serial device is /dev/ttyS0 for COM1, etc)
@@ -127,7 +126,7 @@ class teleinfo extends eqLogic {
 
 			// We can change the baud rate, parity, length, stop bits, flow control
 			$serial->confBaudRate(1200);
-			$serial->confParity("none");
+			$serial->confParity("even");
 			$serial->confCharacterLength(7);
 			$serial->confStopBits(1);
 			$serial->confFlowControl("none");
@@ -137,12 +136,21 @@ class teleinfo extends eqLogic {
 
 			while (true) {
 				$trame = ''; 
-				$trame=trim($serial->readPort());
+				$char  = '';
+				$trame = ''; 
+				// on lit tous les caracteres jusqu'a la fin de la trame
+				while ($char != chr(0x02)) {
+					$char=$serial->readPort(1);
+					if ($char != chr(0x02)){
+						$trame .= $char;
+					}
+				}
+				$trame=trim($trame);
 				log::add('teleinfo','debug',$teleinfo->getHumanName() . ': ' . $trame);
 				$teleinfo->UpdateInfo($trame);
 			}
 			//$serial->sendMessage("Hello !");
-			$serial->deviceClose();*/
+			$serial->deviceClose();
 		}
 	}
 	public function UpdateInfo($trame) {
