@@ -66,7 +66,7 @@ et commenter la ligne suivante dans le fichier  */etc/inittab*
 ----
 #T0:23:respawn:/sbin/getty -L ttyAMA0 115200 vt100
 ----
-Depuis la version jessie le fichier inittab n'est plus présent. Il faut utiliser ces lignes de commandes :
+Seit dieser Jessie-Version ist die inittab-Datei nicht mehr vorhanden. Diese Befehlszeilen müssen verwendet werden :
 ----
 sudo systemctl stop serial-getty@ttyAMA0.service
 sudo systemctl disable serial-getty@ttyAMA0.service
