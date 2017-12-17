@@ -41,7 +41,7 @@ IDENTIFIANT_DU_COMPTEUR : 0095123657
 
 Index BASE : 123456789
 
-Donnera l'URL : http://192.168.1.15:80/jeedom/plugins/teleinfo/core/php/jeeTeleinfo.php?api=zertyuiolkjhgfdsxc&ADCO=0095123657*&BASE=123456789*
+Geben Sie die URL ein : http://192.168.1.15:80/jeedom/plugins/teleinfo/core/php/jeeTeleinfo.php?api=zertyuiolkjhgfdsxc&ADCO=0095123657*&BASE=123456789*
 
 
 Il est possible d'envoyer toutes les informations transmises par les compteurs suivant les étiquettes définie par la norme. 
