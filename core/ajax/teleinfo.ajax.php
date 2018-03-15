@@ -40,7 +40,7 @@ try {
 		}
 		teleinfo::stopDeamon();
 		if (teleinfo::deamonRunning()) {
-			throw new Exception(__('Impossible d\'arrêter le démon', __FILE__));
+			throw new Exception(__('Impossible d\'arrÃªter le dÃ©mon', __FILE__));
 		}
 		log::clear('teleinfocmd');
 		teleinfo::cron();
@@ -78,7 +78,7 @@ try {
             $object = object::rootObject();
         }
         if (!is_object($object)) {
-            throw new Exception('{{Aucun objet racine trouvé}}');
+            throw new Exception('{{Aucun objet racine trouvÃ©}}');
         }
         $return = array('object' => utils::o2a($object));
 
@@ -163,7 +163,7 @@ try {
 		$path = realpath(dirname(__FILE__) . '/../../ressources/teleinfo.log');
 		//log::add('teleinfo', 'info', $path);
 		if (!file_exists($path)) {
-			$return['result'] = array('Deamon non lancé');
+			$return['result'] = array('Deamon non lancÃ©');
 			ajax::success($return);
 		}else{
 			$log = new SplFileObject($path);
@@ -222,6 +222,5 @@ try {
     throw new Exception('Aucune methode correspondante');
     /*     * *********Catch exeption*************** */
 } catch (Exception $e) {
-    ajax::error(displayExeption($e), $e->getCode());
+    ajax::error(displayException($e), $e->getCode());
 }
-?>
