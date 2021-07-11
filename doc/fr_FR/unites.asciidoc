@@ -1,8 +1,8 @@
-- Les index : Watt-heure
-- Tranche tarifaire : Chaîne de caractères.
+- Les indexes : Watt-heure
+- Tranche tarifaire : chaîne de caractères.
 - Puissance apparente instantanée : Volt-Ampère.
 - Les intensités : Ampère.
 - Les alertes dépassement : Ampère
-- Type d'abonnement : Chaîne de caractères.
-- Le préavis EJP et la couleur du lendemn : Chaîne de caractères.
+- Type d'abonnement : chaîne de caractères.
+- Le préavis EJP et la couleur du lendemn : chaîne de caractères.
 - La conso moyenne sur la dernière minute : Watt

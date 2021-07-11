@@ -2,6 +2,6 @@ Pour récupérer la Téléinformation il faut se connecter sur les bornes I1 et 
 
 image::../images/teleinfo_compteur.png[]
 
-Plusieurs architectures peuvent être ensuite choisis : 
+Plusieurs architectures peuvent être ensuite choisies : 
 
 image::../images/teleinfo_archi.png[]
