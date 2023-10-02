@@ -1287,6 +1287,20 @@ class teleinfo extends eqLogic {
 			$cmd->setEventOnly(1);
 			$cmd->setIsVisible(1);
 			$cmd->save();
+			$cmd = null;
+                        $cmd = new teleinfoCmd();
+                        $cmd->setName('Plage Horaires');
+                        $cmd->setEqLogic_id($this->id);
+                        $cmd->setLogicalId('PTEC');
+                        $cmd->setType('info');
+                        $cmd->setConfiguration('info_conso', 'PTEC');
+                        $cmd->setDisplay('generic_type','DONT');
+                        $cmd->setSubType('string');
+                        //$cmd->setUnite('');
+                        $cmd->setIsHistorized(0);
+                        $cmd->setEventOnly(1);
+                        $cmd->setIsVisible(1);
+                        $cmd->save();
 		}
 		
 	
